@@ -9,6 +9,7 @@ Every term in the order the video defines it. `chapter` = first chapter whose na
 | prompt | ch00 | The text given to the model to continue. |
 | vector | ch00 | An ordered list of real numbers (formalised in chapter 1). |
 | steering vector | ch00 | A vector added inside a model to change its behaviour (formalised in chapters 7-8). |
+| random seed | ch00 | A number that initialises the random number generator, so a run can be repeated exactly. |
 | scalar | ch01 | A single real number. |
 | real number | ch01 | Any number on the continuous number line; their set is ℝ. |
 | element of | ch01 | x ∈ S means x belongs to the set S. |
@@ -30,6 +31,7 @@ Every term in the order the video defines it. `chapter` = first chapter whose na
 | attention | ch04 | Sub-layer that moves information between positions. |
 | MLP | ch04 | Sub-layer that transforms each position's vector separately. |
 | residual stream | ch04 | The running per-position vector that every sub-layer reads from and adds to. |
+| normalization | ch04 | Rescaling a vector (LayerNorm in GPT-2) before a sub-layer reads it; GPT-2 also normalizes the final stream before W_U. |
 | activation | ch04 | A number or vector computed inside the model, e.g. h_ℓ^(t). |
 | forward pass | ch04 | One run through all layers. |
 | matrix | ch05 | A rectangular grid of numbers; times a vector = one dot product per row. |
@@ -51,6 +53,7 @@ Every term in the order the video defines it. `chapter` = first chapter whose na
 | confidence interval | ch09 | Range of plausible values for an estimate (here 95%, bootstrap). |
 | bootstrap | ch09 | Resampling the data with replacement to measure uncertainty. |
 | negative log-likelihood | ch09 | −(1/T) Σ log p(token_t | earlier tokens): the model's average surprise. |
+| nats | ch09 | Unit of log-likelihood computed with the natural logarithm. |
 | Inference-Time Intervention | ch10 | Shifting activations of selected attention heads (Li et al.). |
 | representation engineering | ch10 | Reading and controlling representation directions (Zou et al.). |
 | directional ablation | ch10 | x − (r̂·x) r̂: delete the component along r̂. |

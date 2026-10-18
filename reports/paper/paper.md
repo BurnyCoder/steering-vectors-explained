@@ -3,7 +3,7 @@ title: "Steering Vectors from Scratch: a Source-Verified Explainer and a Pre-reg
 author: "Libor Burian, independent researcher"
 date: "October 2026"
 abstract: |
-  Steering vectors change a language model's behaviour by adding a fixed vector to its residual-stream activations at inference time. We contribute two things. (i) A narrated 12-chapter animated explainer that defines every symbol of the two central equations (the mean-difference vector of Contrastive Activation Addition and the additive intervention) before using it. The explainer is built with three mechanical guarantees: all 26 on-screen quotations are verified verbatim against their downloaded sources, every spoken or displayed number is computed by code, and a test fails if narration uses a term before the chapter that defines it. (ii) Two pre-registered experiments on the "Love" − "Hate" Activation Addition (ActAdd) vector of Turner et al. on GPT-2-XL (layer 6), with 8-word IMDb review openings, a norm-matched random-direction control and an independent sentiment classifier. Experiment 1 (N = 30 prompts) supports direction specificity: at coefficient α = 5, P(positive) exceeds equal-norm random directions by +0.125 (95% CI [0.045, 0.203]), but the gain over no steering is not significant. Experiment 2 is powered for that contrast (N = 190 new prompts) and finds +0.146 [0.102, 0.192] over no steering. It replicates direction specificity (+0.132 [0.097, 0.166]), shows a non-monotone dose–response peaking at α = 10, and a fluency cost of +1.38 nats/token at α = 15. The negated vector does not reduce positivity. A post-hoc analysis shows the vector largely injects the words themselves: "love" appears in 62.5% of α = 5 continuations and "hate" in 29.5% at α = −5.
+  Steering vectors change a language model's behaviour by adding a fixed vector to its residual-stream activations at inference time. We contribute two things. (i) A narrated 12-chapter animated explainer that defines every symbol of the two central equations (the mean-difference vector of Contrastive Activation Addition and the additive intervention) before using it. The explainer is built with three mechanical guarantees: all 28 on-screen quotations (40 in the registry) are verified verbatim against their downloaded sources, every spoken or displayed number is computed by code, and a test fails if narration uses a term before the chapter that defines it. (ii) Two pre-registered experiments on the "Love" − "Hate" Activation Addition (ActAdd) vector of Turner et al. on GPT-2-XL (layer 6), with 8-word IMDb review openings, a norm-matched random-direction control and an independent sentiment classifier. Experiment 1 (N = 30 prompts) supports direction specificity: at coefficient α = 5, P(positive) exceeds equal-norm random directions by +0.125 (95% CI [0.045, 0.203]), but the gain over no steering is not significant. Experiment 2 is powered for that contrast (N = 190 new prompts) and finds +0.146 [0.102, 0.192] over no steering. It replicates direction specificity (+0.132 [0.097, 0.166]), shows its highest mean positivity at α = 10 and a lower one at α = 15, and a fluency cost of +1.38 nats/token at α = 15. The negated vector does not reduce positivity. A post-hoc analysis suggests the vector injects the words more than the sentiment: the whole word "love" appears in 61.4% of α = 5 continuations and "hate" in 22.5% at α = −5, and those α = −5 continuations are rated as positive as unsteered text (0.665 vs 0.665).
 ---
 
 # Introduction
@@ -23,7 +23,7 @@ The residual stream is "simply the sum of the output of all the previous layers 
 
 Given a dataset $\mathcal{D}$ of triples (prompt $p$, completion $c^+$ showing a behaviour, completion $c^-$ showing its opposite), CAA defines
 $$v_\ell=\frac{1}{|\mathcal{D}|}\sum_{(p,c^+,c^-)\in\mathcal{D}}\Big[a_\ell(p,c^+)-a_\ell(p,c^-)\Big],\qquad \tilde h_\ell^{(t)}=h_\ell^{(t)}+\alpha\,v_\ell\quad(t\in T),$$
-where $a_\ell(p,c)\in\mathbb{R}^d$ is the residual stream at layer $\ell$ and the completion's last token (Rimsky et al., 2024). ActAdd is the case $|\mathcal{D}|=1$ with prompts $p^\pm$. It produces one difference per token position, $h_A=h_\ell(p^+)-h_\ell(p^-)\in\mathbb{R}^{n\times d}$, added at the first $n$ positions of the user prompt (Turner et al., 2024).
+where $a_\ell(p,c)\in\mathbb{R}^d$ is the residual stream at layer $\ell$ at the position of the completion's answer letter (Rimsky et al., 2024). ActAdd is close to the case $|\mathcal{D}|=1$ with prompts $p^\pm$, but it has no completions. It produces one difference per token position, $h_A=h_\ell(p^+)-h_\ell(p^-)\in\mathbb{R}^{n\times d}$, added at the first $n$ positions of the user prompt (Turner et al., 2024).
 
 # Method
 
@@ -74,10 +74,10 @@ Table 1: Pre-registered results (95% CI). Full tables: `reports/results_tables.m
   * $\alpha=5$: +0.146;
   * $\alpha=10$: +0.168;
   * $\alpha=15$: +0.109.
-* **The response peaks at $\alpha=10$** (mean 0.833) and declines at 15 (0.774).
+* **Mean positivity is highest at $\alpha=10$** (0.833) and lower at 15 (0.774). This is descriptive; the 10 vs 5 difference was not tested.
 * **Each seed alone** excludes zero for the primary contrast.
 
-**Post-hoc (exploratory).** The share of continuations matching `lov` rises from 5.6% unsteered to 62.5% at $\alpha=5$. The share matching `hat(e|ing|red)` rises from 0.4% to 29.5% at $\alpha=-5$, typically in incoherent text that the classifier often rates positive.
+**Post-hoc (exploratory).** The share of continuations containing the whole word "love" (love, loves, loved, loving, lover(s)) rises from 5.6% unsteered to 61.4% at $\alpha=5$. The share containing "hate" (hate(s/d), hating, hatred, hateful) rises from 0.4% to 22.5% at $\alpha=-5$. These 128 continuations average P(positive) 0.665, equal to unsteered text (0.665); they are typically incoherent. A v1.0 version of this analysis used substring patterns (`lov`, `hat(e|ing|red)`), which also matched words such as "whatever", and reported 62.5% and 29.5%.
 
 # Discussion
 
@@ -85,7 +85,8 @@ Table 1: Pre-registered results (95% CI). Full tables: `reports/results_tables.m
 
 * **Strong:** (i) the canonical ActAdd vector shifts GPT-2-XL continuations of unrelated text toward positive sentiment, by about 0.15 absolute probability at $\alpha=5$. (ii) The effect is specific to the direction, not to the size of the push. Both are pre-registered, and (ii) is replicated.
 * **Supported:** the cost in fluency grows with $\alpha$ and exceeds that of random directions of the same norm at large $\alpha$.
-* **Not supported:** monotone dose–response, and sign symmetry.
+* **Mixed:** the pre-registered dose–response test (H2, mean per-prompt Spearman $\rho$) failed in Experiment 1 and held in Experiment 2, yet mean positivity falls from $\alpha=10$ to 15, so the relation is not monotone.
+* **Not supported:** sign symmetry.
 
 **Implications.**
 
@@ -119,7 +120,7 @@ Under pre-registration with norm-matched controls, the ActAdd "Love" − "Hate" 
 
 # Appendix A: Reproducibility
 
-* **Code, data and logs:** `github.com/BurnyCoder/steering-vectors-explained`. `uv run steering-explainer` runs every phase.
+* **Code and data:** `github.com/BurnyCoder/steering-vectors-explained` (run logs are written locally to `logs/`, which is not tracked). `uv run steering-explainer` runs every phase.
 * **Pre-registrations:** commits `7da591f` (Exp. 1) and `23a32f4` (Exp. 2) precede their data.
 * **Hardware:** RTX 5070 Laptop GPU (8 GB), PyTorch 2.11 + CUDA 12.8, transformers 5.20; about 3 s per batch of 16 conditions.
 * **Seeds:**

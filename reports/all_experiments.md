@@ -9,7 +9,7 @@ Numbers: [results_tables.md](results_tables.md). Paper: [paper/paper.pdf](paper/
 | Practical example | Reproduce ActAdd "Love" − "Hate" on "I hate you because" | 1 prompt, 3 seeds | — (descriptive) | `data/practical_example.json`: seed-0 steered text turns to love |
 | 01 | Is the vector better than a random push of equal norm? | 30 (+20 pilot) | [exp01](exp01_preregistration.md) | **supported**: +0.125 [+0.045, +0.203] |
 | 02 | Is steering better than not steering? | 190 | [exp02](exp02_preregistration.md) | **supported**: +0.146 [+0.102, +0.192] |
-| post-hoc | Why did α = −5 not lower positivity? | exp01 + exp02 | none (exploratory) | the vector injects the words: "hate" in 29.5% at α = −5 |
+| post-hoc | Why did α = −5 not lower positivity? | exp01 + exp02 | none (exploratory) | the vector injects the words: "hate" (whole word) in 22.5% at α = −5, rated as positive as unsteered text |
 
 Details: [exp01_love_hate_dose_response.md](exp01_love_hate_dose_response.md),
 [exp02_powered_replication.md](exp02_powered_replication.md).
@@ -65,6 +65,14 @@ Details: [exp01_love_hate_dose_response.md](exp01_love_hate_dose_response.md),
    * Parallel renders shared manim-voiceover's `cache.json`; now one cache per chapter.
    * Contact-sheet QA found clipped and overlapping text in chapters 0, 2-5 and 7-11; each was fixed and
      re-checked.
+8. **Independent fact-check of the v1.0 video** ([docs/fact_check.md](../docs/fact_check.md)): 25 errors, fixed in v1.1.
+   * The post-hoc substring patterns overcounted ("whatever" contains "hate"); whole-word counts lower "hate" at
+     α = −5 from 29.5% to 22.5%.
+   * The narration said "same random choices", but batched sampling only shares the seed. It said GPT-2 itself
+     prepends `<|endoftext|>`, but that is TransformerLens' default (item 3 above).
+   * The narration said ActAdd is exactly the |D| = 1 case of CAA, which is not so: ActAdd has no completions and
+     keeps one difference per position.
+   * The pre-registered H2 was never spoken; every pre-registered hypothesis is now voiced.
 
 ## Overall conclusions (with confidence)
 * **High confidence** (pre-registered, replicated, per-seed robust): on GPT-2-XL, adding the ActAdd
@@ -72,8 +80,8 @@ Details: [exp01_love_hate_dose_response.md](exp01_love_hate_dose_response.md),
   openings by about 0.13-0.15 (absolute probability), relative to both no steering and equal-norm random
   directions.
 * **High confidence:** steering costs fluency, and more so than random pushes of equal norm at α ≥ 10.
-* **Moderate confidence** (one experiment each way): the effect is non-monotone. It peaks around α = 10 and
-  drops at 15 as text degrades.
+* **Moderate confidence** (one experiment each way): the effect is non-monotone. Mean positivity is highest at
+  α = 10 (the 10 vs 5 difference was not tested) and drops at 15 as text degrades.
 * **Exploratory:**
   * The vector acts substantially through word identity: "love"/"hate" appear far more often.
   * The negative direction is not "negative sentiment".

@@ -19,3 +19,7 @@ media/
 outputs/*.mp4
 # timestamped run logs
 logs/
+# visual QA contact sheets and ffmpeg intermediates (regenerate with --phases inspect / assemble)
+outputs/check/
+outputs/concat.txt
+outputs/chapters.ffmeta

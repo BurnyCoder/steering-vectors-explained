@@ -116,7 +116,7 @@ def text(s: str, size: int = T.SIZE_BODY, color: str = T.FG, width: int = 0, **k
 def quote_card(quote_id: str, width: int = 58, size: int = 26) -> VGroup:
     """Verbatim quote (italic, wrapped) + attribution line; text comes from data/sources.yaml."""
     q, src = sources.get_quote(registry(), quote_id)
-    shown = re.sub(r'"([^"]*)"', r"‘\1’", q.text)  # quotes inside a quotation become single quotes (typographic nesting)
+    shown = re.sub(r'["“]([^"“”]*)["”]', r"‘\1’", q.text)  # straight or curly inner quotes -> single quotes (nesting)
     body = text("“" + shown + "”", size=size, width=width, slant=ITALIC)
     attribution = text(f"— {src.short}, {q.location}", size=min(size, T.SIZE_SMALL) - 4, color=T.FG2, width=int(width * 1.2))
     group = VGroup(body, attribution).arrange(DOWN, aligned_edge=RIGHT, buff=0.2)

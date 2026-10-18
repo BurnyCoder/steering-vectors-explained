@@ -290,7 +290,12 @@ sources:
     short: "Vaswani et al. 2017, NeurIPS"
     citation: "Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention Is All You Need. NeurIPS 2017. arXiv:1706.03762."
     url: "https://arxiv.org/abs/1706.03762"
+    fetch_url: "https://ar5iv.labs.arxiv.org/html/1706.03762"
     license: "arXiv non-exclusive"
+    quotes:
+      - id: vaswani_causal
+        text: "attend to all positions in the decoder up to and including that position"
+        location: "Section 3.2.3"
   - id: maas2011imdb
     short: "Maas et al. 2011 (IMDb)"
     citation: "Maas, A. L., Daly, R. E., Pham, P. T., Huang, D., Ng, A. Y., Potts, C. (2011). Learning Word Vectors for Sentiment Analysis. ACL 2011, 142-150."

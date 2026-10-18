@@ -7,6 +7,7 @@ terms:
   - {term: prompt, chapter: ch00, aliases: [prompt, prompts], definition: "The text given to the model to continue."}
   - {term: vector, chapter: ch00, aliases: [vector, vectors], definition: "An ordered list of real numbers (formalised in chapter 1)."}
   - {term: steering vector, chapter: ch00, aliases: [steering vector, steering vectors], definition: "A vector added inside a model to change its behaviour (formalised in chapters 7-8)."}
+  - {term: random seed, chapter: ch00, aliases: [seed, seeds], definition: "A number that initialises the random number generator, so a run can be repeated exactly."}
   - {term: scalar, chapter: ch01, aliases: [scalar, scalars], definition: "A single real number."}
   - {term: real number, chapter: ch01, aliases: [real number, real numbers], definition: "Any number on the continuous number line; their set is ℝ."}
   - {term: element of, chapter: ch01, aliases: [element of, elements of], definition: "x ∈ S means x belongs to the set S."}
@@ -28,6 +29,7 @@ terms:
   - {term: attention, chapter: ch04, aliases: [attention], definition: "Sub-layer that moves information between positions."}
   - {term: MLP, chapter: ch04, aliases: [MLP, multilayer perceptron], definition: "Sub-layer that transforms each position's vector separately."}
   - {term: residual stream, chapter: ch04, aliases: [residual stream], definition: "The running per-position vector that every sub-layer reads from and adds to."}
+  - {term: normalization, chapter: ch04, aliases: [normalization], definition: "Rescaling a vector (LayerNorm in GPT-2) before a sub-layer reads it; GPT-2 also normalizes the final stream before W_U."}
   - {term: activation, chapter: ch04, aliases: [activation, activations], definition: "A number or vector computed inside the model, e.g. h_ℓ^(t)."}
   - {term: forward pass, chapter: ch04, aliases: [forward pass], definition: "One run through all layers."}
   - {term: matrix, chapter: ch05, aliases: [matrix], definition: "A rectangular grid of numbers; times a vector = one dot product per row."}
@@ -49,6 +51,7 @@ terms:
   - {term: confidence interval, chapter: ch09, aliases: [confidence interval, confidence intervals], definition: "Range of plausible values for an estimate (here 95%, bootstrap)."}
   - {term: bootstrap, chapter: ch09, aliases: [bootstrap], definition: "Resampling the data with replacement to measure uncertainty."}
   - {term: negative log-likelihood, chapter: ch09, aliases: [negative log-likelihood, log-likelihood], definition: "−(1/T) Σ log p(token_t | earlier tokens): the model's average surprise."}
+  - {term: nats, chapter: ch09, aliases: [nats], definition: "Unit of log-likelihood computed with the natural logarithm."}
   - {term: Inference-Time Intervention, chapter: ch10, aliases: [Inference-Time Intervention], definition: "Shifting activations of selected attention heads (Li et al.)."}
   - {term: representation engineering, chapter: ch10, aliases: [representation engineering], definition: "Reading and controlling representation directions (Zou et al.)."}
   - {term: directional ablation, chapter: ch10, aliases: [directional ablation, ablation], definition: "x − (r̂·x) r̂: delete the component along r̂."}

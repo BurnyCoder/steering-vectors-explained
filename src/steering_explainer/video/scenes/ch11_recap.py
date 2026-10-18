@@ -11,16 +11,16 @@ from steering_explainer.video.formulas import h_equation, v_equation
 from steering_explainer.video.widgets import ChapterScene, symbol_row, text
 
 ROWS = [  # symbol, belongs to, one-sentence meaning
-    (r"v_\ell", r"\in\mathbb{R}^d", "steering vector for layer ℓ", T.STEER),
+    (r"v_\ell", r"\in\mathbb{R}^d", "steering vector for layer ℓ (ActAdd: one per position t)", T.STEER),
     (r"\ell", r"\in\{0,\dots,L-1\}", "which layer's input is edited", T.FG),
     (r"\mathcal{D}", r"=\{(p,c^+,c^-),\dots\}", "finite set of contrast triples", T.SET),
     (r"|\mathcal{D}|", r"\in\{1,2,3,\dots\}", "number of triples", T.SET),
     (r"p,\ c^+,\ c^-", r"\text{token sequences}", "prompt; behaviour shown / its opposite", T.PLUS),
-    (r"a_\ell(p,c)", r"\in\mathbb{R}^d", "residual stream at layer ℓ, last token of c", T.FG),
+    (r"a_\ell(p,c)", r"\in\mathbb{R}^d", "residual stream at layer ℓ, at the answer letter of c", T.FG),
     (r"h_\ell^{(t)}", r"\in\mathbb{R}^d", "residual stream entering layer ℓ at position t", T.VEC),
     (r"\alpha", r"\in\mathbb{R}", "steering coefficient: strength and sign", T.ALPHA),
     (r"T", r"\text{set of positions } t", "where the vector is added", T.SET),
-    (r"\tilde h_\ell^{(t)}", r"\in\mathbb{R}^d", "steered activation, passed to later layers", T.VEC),
+    (r"\tilde h_\ell^{(t)}", r"\in\mathbb{R}^d", "steered activation, fed into layer ℓ", T.VEC),
 ]
 
 

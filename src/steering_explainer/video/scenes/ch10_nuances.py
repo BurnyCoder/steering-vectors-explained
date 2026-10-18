@@ -21,16 +21,19 @@ class Ch10(ChapterScene):
 
         with self.say("limits"):
             self.cite("turner2024actadd", "tan2024generalization")
-            cards = [quote_card(q, 44, 24) for q in ("actadd_coeff_limit", "actadd_middle_layers", "actadd_api_access", "tan_variable")]
-            grid = VGroup(VGroup(cards[0], cards[1]).arrange(RIGHT, buff=0.6, aligned_edge=UP),
-                          VGroup(cards[2], cards[3]).arrange(RIGHT, buff=0.6, aligned_edge=UP)).arrange(DOWN, buff=0.5)
-            grid.scale_to_fit_width(13).next_to(head, DOWN, buff=0.5)
-            anti = quote_card("tan_anti_steerable", 80, 22).to_edge(DOWN, buff=0.6)
-            for mark, card in zip(("coeff", "middle", "api", "tan"), cards):
+            # 3 × 2 grid in narration order; the layer-choice card explains why our example uses layer 6 of 48
+            ids = ("actadd_coeff_limit", "actadd_middle_layers", "actadd_layer_choice", "actadd_api_access", "tan_variable",
+                   "tan_anti_steerable")
+            cards = [quote_card(q, 44, 22) for q in ids]
+            grid = VGroup(*[VGroup(cards[i], cards[i + 1]).arrange(RIGHT, buff=0.6, aligned_edge=UP) for i in (0, 2, 4)]
+                          ).arrange(DOWN, buff=0.4)
+            grid.scale_to_fit_width(13)
+            if grid.height > 5.6:
+                grid.scale_to_fit_height(5.6)  # stay clear of the title and the footer
+            grid.next_to(head, DOWN, buff=0.4)
+            for mark, card in zip(("coeff", "middle", "layer", "api", "tan", "anti"), cards):
                 self.wait_until_bookmark(mark)
                 self.play(FadeIn(card), run_time=0.6)
-            self.wait_until_bookmark("anti")
-            self.play(FadeIn(anti), run_time=0.6)
         self.clear_stage(); self.add(head)
 
         with self.say("relatives"):
@@ -39,7 +42,7 @@ class Ch10(ChapterScene):
             q1 = quote_card("iti_definition", 70, 26).shift(UP * 1.2)
             self.play(FadeIn(q1), run_time=0.6)
             self.wait_until_bookmark("repe")
-            q2 = quote_card("repe_definition", 70, 26).next_to(q1, DOWN, buff=0.5)
+            q2 = quote_card("repe_reading_control", 70, 26).next_to(q1, DOWN, buff=0.5)  # supports "reads and controls"
             self.play(FadeIn(q2), run_time=0.6)
 
             self.wait_until_bookmark("abl")

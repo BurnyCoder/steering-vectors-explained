@@ -1,0 +1,7 @@
+{
+  "pilot_n": 20,
+  "pilot_mean_diff": 0.13538601333333328,
+  "pilot_dz": 0.6332865246652412,
+  "required_n_80pct": 22,
+  "chosen_n": 30
+}

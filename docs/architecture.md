@@ -23,7 +23,8 @@ themselves (they receive the frozen `Settings` from `config.py`).
 | `study/score.py` | SiEBERT P(positive) |
 | `study/stats.py` | paired bootstrap CI, Wilcoxon, Holm, power (`TTestPower`), per-prompt Spearman |
 | `study/analyze.py` | the pre-registered analysis → `summary.json` |
-| `study/plots.py` | dose-response figure (light for reports, dark for the video) |
+| `study/posthoc.py` | exploratory whole-word love/hate counts + positivity of α = −5 "hate" completions → `*_posthoc.json` |
+| `study/plots.py` | dose-response figure (light for reports, dark for the video); redrawn by the `figures` phase |
 | `video/theme.py` | colours/fonts; one colour per mathematical role |
 | `video/tts_edge.py` | manim-voiceover `SpeechService` for edge-tts with word timings (bookmarks) |
 | `video/widgets.py` | `ChapterScene` base (narration beats, citation footer) + reusable components |

@@ -14,21 +14,22 @@ License: CC BY 4.0
 - **actadd_bias_terms** (Section 1): “These vectors act like “virtual bias terms” because ActAdd directly adds the steering vectors to the forward pass at inference time.”
 - **actadd_padding** (Appendix C): “The contrast pair can be of arbitrary lengths (empirically, right-padding the shorter prompt using whitespace gives good results).”
 - **actadd_coeff_limit** (Appendix C): “The injection coefficient cannot be increased indefinitely, as shown by our coefficient sweeps (see Appendix Table 7).”
-- **actadd_middle_layers** (Section 3, footnote 2): “intervening at the middle layers is most effective.”
+- **actadd_middle_layers** (Section 3 (main text)): “intervening at the middle layers is most effective.”
+- **actadd_layer_choice** (Appendix C): “the Love vector is most effective inserted at layer 6, while the more abstract Conspiracy vector is better inserted later, at layer 23.”
 - **actadd_api_access** (Section 5 (Limitations)): “ActAdd is not immediately applicable given only API access to a model.”
 
 ## Turner et al. 2023, LessWrong
 
-Turner, A. M., Thiergart, L., Udell, D., Leech, G., Mini, U., MacDiarmid, M. (2023). Steering GPT-2-XL by adding an activation vector. LessWrong / AI Alignment Forum.  
+Turner, A. M., MacDiarmid, M., Udell, D., Thiergart, L., Mini, U. (2023, May 13). Steering GPT-2-XL by adding an activation vector. LessWrong / AI Alignment Forum.  
 Link: https://www.lesswrong.com/posts/5spBue2z2tw4JuDCx/steering-gpt-2-xl-by-adding-an-activation-vector  
 License: all rights reserved (no license stated)
 
-- **lw_love_hate_setup** (Section 'Demonstrations'): “"Love" - "Hate" before attention layer 6 with coefficient +5”
-- **lw_cherry_picked** (Introduction): “We slightly (best-of-3) cherry-picked our results in order to make the post shorter.”
+- **lw_love_hate_setup** (Section 'Demonstrations', example 1): ““Love”—“Hate” before attention layer 6 with coefficient +5”
+- **lw_cherry_picked** (Section 'Demonstrations' (the introduction's example was best-of-30, footnote 1)): “We slightly (best-of-3) cherry-picked our results in order to make the post shorter.”
 
 ## montemac/activation_additions (MIT)
 
-Turner, A. M., MacDiarmid, M., et al. activation_additions: code for ActAdd (GitHub repository, MIT license).  
+MacDiarmid, M., Udell, D., Mini, U., Thiergart, L., et al. (2023). activation_additions: 'Algebraic value editing in pretrained language models', the ActAdd code (GitHub repository, MIT license).  
 Link: https://github.com/montemac/activation_additions  
 License: MIT
 
@@ -43,6 +44,8 @@ License: CC BY 4.0
 
 - **caa_definition** (Abstract): “CAA computes “steering vectors” by averaging the difference in residual stream activations between pairs of positive and negative examples of a particular behavior, such as factual versus hallucinatory responses.”
 - **caa_positions** (Abstract): “these steering vectors are added at all token positions after the user’s prompt”
+- **caa_noise** (Section 2 (Related work)): “Using hundreds of diverse contrast pairs reduces noise in the steering vector, allowing for a more precise encoding of the behavior of interest.”
+- **caa_answer_letter** (Section 3 (Method)): “we compute the difference in the language model's activations at the position of the answer letter between all the positive and negative prompts”
 
 ## Subramani et al. 2022, Findings of ACL
 
@@ -56,7 +59,7 @@ License: CC BY 4.0
 
 Mikolov, T., Yih, W., Zweig, G. (2013). Linguistic Regularities in Continuous Space Word Representations. Proceedings of NAACL-HLT 2013, 746-751.  
 Link: https://aclanthology.org/N13-1090/  
-License: ACL Anthology (pre-2016, no CC license)
+License: CC BY-NC-SA 3.0 (ACL Anthology, pre-2016 papers)
 
 - **mikolov_king_queen** (Abstract, p. 746): “"King - Man + Woman" results in a vector very close to "Queen."”
 
@@ -83,6 +86,8 @@ Link: https://cdn.openai.com/better-language-models/language_models_are_unsuperv
 License: no license stated
 
 - **gpt2_vocab** (Section 2.3): “The vocabulary is expanded to 50,257.”
+- **gpt2_preln** (Section 2.3): “Layer normalization (Ba et al., 2016) was moved to the input of each sub-block”
+- **gpt2_final_ln** (Section 2.3): “an additional layer normalization was added after the final self-attention block”
 
 ## Arditi et al. 2024, NeurIPS
 
@@ -94,7 +99,7 @@ License: arXiv non-exclusive
 
 ## Tan et al. 2024, NeurIPS
 
-Tan, D., Chanin, D., Lynch, A., Kanoulas, D., Paige, B., Garriga-Alonso, A., Kirk, R. (2024). Analyzing the Generalization and Reliability of Steering Vectors. NeurIPS 2024. arXiv:2407.12404.  
+Tan, D., Chanin, D., Lynch, A., Paige, B., Kanoulas, D., Garriga-Alonso, A., Kirk, R. (2024). Analysing the Generalisation and Reliability of Steering Vectors. NeurIPS 2024. arXiv:2407.12404 (arXiv listing titled 'Analyzing the Generalization ...').  
 Link: https://arxiv.org/abs/2407.12404  
 License: CC BY 4.0
 
@@ -103,7 +108,7 @@ License: CC BY 4.0
 
 ## Li et al. 2023 (ITI), NeurIPS
 
-Li, K., Patel, O., Viegas, F., Pfister, H., Wattenberg, M. (2023). Inference-Time Intervention: Eliciting Truthful Answers from a Language Model. NeurIPS 2023. arXiv:2306.03341.  
+Li, K., Patel, O., Viégas, F., Pfister, H., Wattenberg, M. (2023). Inference-Time Intervention: Eliciting Truthful Answers from a Language Model. NeurIPS 2023. arXiv:2306.03341.  
 Link: https://arxiv.org/abs/2306.03341  
 License: CC BY 4.0
 
@@ -116,6 +121,7 @@ Link: https://arxiv.org/abs/2310.01405
 License: arXiv non-exclusive
 
 - **repe_definition** (Figure 1 caption): “a top-down approach to AI transparency called representation engineering (RepE)”
+- **repe_reading_control** (Section 1 (Introduction)): “we develop improved baselines for reading and controlling representations”
 
 ## Templeton et al. 2024, Transformer Circuits
 
@@ -123,7 +129,7 @@ Templeton, A., Conerly, T., Marcus, J., et al. (2024). Scaling Monosemanticity: 
 Link: https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html  
 License: no license stated
 
-- **templeton_clamp** (Section 'Feature steering'): “"clamp" specific features of interest to artificially high or low values during the forward pass”
+- **templeton_clamp** (Section 'Assessing Feature Interpretability', subsection 'Influence on Behavior'): “"clamp" specific features of interest to artificially high or low values during the forward pass”
 
 ## Anthropic 2024, Golden Gate Claude
 
@@ -139,7 +145,49 @@ Chen, R., Arditi, A., Sleight, H., Evans, O., Lindsey, J. (2025). Persona Vector
 Link: https://arxiv.org/abs/2507.21509  
 License: arXiv non-exclusive
 
-- **persona_mean_diff** (Abstract): “computed as the difference in mean activations between responses exhibiting the target trait”
+- **persona_mean_diff** (Figure 2 caption (Section 2)): “computed as the difference in mean activations between responses exhibiting the target trait”
+
+## TransformerLens (Nanda & Bloom 2022)
+
+Nanda, N., Bloom, J. (2022). TransformerLens. GitHub repository (MIT license); quoted from transformer_lens/HookedTransformer.py at tag v2.15.4.  
+Link: https://github.com/TransformerLensOrg/TransformerLens  
+License: MIT
+
+- **tl_prepend_default** (HookedTransformer.to_str_tokens docstring (default_prepend_bos)): “which is set to True unless specified otherwise”
+- **tl_gpt2_no_bos** (HookedTransformer.to_str_tokens docstring): “some models eg GPT-2 were not trained with a BOS token”
+
+## HF Transformers (Wolf et al. 2020), tokenization_gpt2.py
+
+Wolf, T., Debut, L., Sanh, V., et al. (2020). Transformers: State-of-the-Art Natural Language Processing. Proceedings of EMNLP 2020: System Demonstrations, 38-45. Quoted from src/transformers/models/gpt2/tokenization_gpt2.py at tag v5.20.1 (Apache-2.0).  
+Link: https://github.com/huggingface/transformers/blob/v5.20.1/src/transformers/models/gpt2/tokenization_gpt2.py  
+License: Apache-2.0
+
+- **hf_no_bos** (GPT2Tokenizer docstring): “add_bos_token (`bool`, *optional*, defaults to `False`)”
+
+## HF Transformers (Wolf et al. 2020), modeling_gpt2.py
+
+Wolf, T., Debut, L., Sanh, V., et al. (2020). Transformers: State-of-the-Art Natural Language Processing. Proceedings of EMNLP 2020: System Demonstrations, 38-45. Quoted from src/transformers/models/gpt2/modeling_gpt2.py at tag v5.20.1 (Apache-2.0).  
+Link: https://github.com/huggingface/transformers/blob/v5.20.1/src/transformers/models/gpt2/modeling_gpt2.py  
+License: Apache-2.0
+
+- **hf_learned_positions** (GPT2Model.__init__ (learned position embeddings)): “self.wpe = nn.Embedding(config.max_position_embeddings, self.embed_dim)”
+- **hf_final_ln** (GPT2Model.forward (final LayerNorm before the LM head)): “hidden_states = self.ln_f(hidden_states)”
+
+## Nissim et al. 2020, Computational Linguistics
+
+Nissim, M., van Noord, R., van der Goot, R. (2020). Fair Is Better than Sensational: Man Is to Doctor as Woman Is to Doctor. Computational Linguistics 46(2), 487-497. doi:10.1162/coli_a_00379.  
+Link: https://aclanthology.org/2020.cl-2.7/  
+License: CC BY 4.0
+
+- **nissim_ignore_inputs** (Section 3): “in practice most implementations of these optimization functions specifically ignore one or more input vectors”
+
+## Engels et al. 2024, ICLR 2025
+
+Engels, J., Michaud, E. J., Liao, I., Gurnee, W., Tegmark, M. (2024). Not All Language Model Features Are One-Dimensionally Linear. ICLR 2025. arXiv:2405.14860.  
+Link: https://arxiv.org/abs/2405.14860  
+License: CC BY 4.0
+
+- **engels_circular** (Abstract): “circular features representing days of the week and months of the year”
 
 ## Vaswani et al. 2017, NeurIPS
 
@@ -147,6 +195,7 @@ Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention Is All You Need. 
 Link: https://arxiv.org/abs/1706.03762  
 License: arXiv non-exclusive
 
+- **vaswani_causal** (Section 3.2.3): “attend to all positions in the decoder up to and including that position”
 
 ## Maas et al. 2011 (IMDb)
 
@@ -157,8 +206,8 @@ License: citation only
 
 ## Hartmann et al. 2023 (SiEBERT)
 
-Hartmann, J., Heitmann, M., Siebert, C., Schamp, C. (2023). More than a Feeling: Accuracy and Application of Sentiment Analysis. International Journal of Research in Marketing 40(1), 75-87.  
-Link: https://huggingface.co/siebert/sentiment-roberta-large-english  
+Hartmann, J., Heitmann, M., Siebert, C., Schamp, C. (2023). More than a Feeling: Accuracy and Application of Sentiment Analysis. International Journal of Research in Marketing 40(1), 75-87. Model: https://huggingface.co/siebert/sentiment-roberta-large-english  
+Link: https://doi.org/10.1016/j.ijresmar.2022.05.005  
 License: citation only
 
 
@@ -185,7 +234,7 @@ License: citation only
 
 ## Efron & Tibshirani 1993
 
-Efron, B., Tibshirani, R. J. (1993). An Introduction to the Bootstrap. Chapman & Hall/CRC.  
+Efron, B., Tibshirani, R. J. (1993). An Introduction to the Bootstrap. Chapman & Hall (the Taylor & Francis DOI record lists 1994).  
 Link: https://doi.org/10.1201/9780429246593  
 License: citation only
 

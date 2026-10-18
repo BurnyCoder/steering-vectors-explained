@@ -34,4 +34,4 @@ training curriculum, loss or checkpoint to upload.
 | 02 | 190 new openings | steered vs. no steering (α = 5) | +0.146 [0.102, 0.192] | steering works on average, about +15 points of positivity |
 | 02 | same | α = −5 vs. 0 | +0.052 [−0.000, 0.105] | reversing the vector did *not* make text negative |
 | 02 | same | fluency at α = 15 | +1.38 nats/token | strong steering makes text less natural |
-| post-hoc | same | word counts | "love" in 62.5% at α = 5; "hate" in 29.5% at α = −5 | the vector largely injects the words themselves |
+| post-hoc | same | whole-word counts | "love" in 61.4% at α = 5; "hate" in 22.5% at α = −5, rated as positive as unsteered text (0.665) | the vector injects the words more than the sentiment |

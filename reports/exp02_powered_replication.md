@@ -42,8 +42,13 @@ More detail:
 
 ## Post-hoc (exploratory, not pre-registered)
 The H3 failure prompted a reading of the completions. Mechanically, the vector also injects the *words*:
-* **"lov…" share:** 62.5% of α = +5 completions, versus 5.6% unsteered.
-* **"hate" share:** 29.5% of α = −5 completions contain "hate", "hating" or "hatred", versus 0.4% unsteered.
+* **"love" share:** 61.4% of α = +5 completions contain the whole word "love" (or loves, loved, loving, lover(s)),
+  versus 5.6% unsteered.
+* **"hate" share:** 22.5% of α = −5 completions contain "hate" (or hates, hated, hating, hatred, hateful), versus 0.4%
+  unsteered. Those 128 completions average P(positive) 0.665, the same as unsteered completions (0.665).
+* **Correction (v1.1 fact-check):** v1.0 counted substrings (`lov`, `hat(e|ing|red)`), which also matched "whatever",
+  "chateau" and glued text, and reported 62.5% and 29.5%. Word-boundary patterns are now used and tested
+  (`study/posthoc.py`, `tests/test_posthoc.py`; [docs/fact_check.md](../docs/fact_check.md)).
 * The α = −5 texts are often incoherent (NLL +1.25) rather than negative, e.g. "ThisHateLove.com is the
   first place…", and the classifier rates many of them positive.
 

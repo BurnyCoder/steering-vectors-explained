@@ -26,6 +26,9 @@ sources:
       - id: actadd_coeff_limit
         text: "The injection coefficient cannot be increased indefinitely, as shown by our coefficient sweeps (see Appendix Table 7)."
         location: "Appendix C"
+      - id: actadd_middle_layers
+        text: "intervening at the middle layers is most effective."
+        location: "Section 3, footnote 2"
       - id: actadd_api_access
         text: "ActAdd is not immediately applicable given only API access to a model."
         location: "Section 5 (Limitations)"

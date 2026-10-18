@@ -1,0 +1,231 @@
+# sources.yaml — single source of truth for every citation and on-screen quote.
+# Global context: scenes show quotes by `id` (video/widgets.py QuoteCard); README/docs list these
+# sources; `uv run pytest -m network` / the verify_sources phase downloads `fetch_url` and checks
+# that every quote occurs verbatim (after whitespace + typographic normalisation, sources.py).
+# License rule (tests/test_sources.py): quotes from anything other than "CC BY 4.0" stay <= 15 words.
+sources:
+  - id: turner2024actadd
+    short: "Turner et al. 2024, arXiv:2308.10248"
+    citation: "Turner, A. M., Thiergart, L., Leech, G., Udell, D., Vazquez, J. J., Mini, U., MacDiarmid, M. (2024). Steering Language Models With Activation Engineering (v1-v4 titled 'Activation Addition: Steering Language Models Without Optimization'). arXiv:2308.10248v5."
+    url: "https://arxiv.org/abs/2308.10248"
+    fetch_url: "https://arxiv.org/html/2308.10248v5"
+    license: "CC BY 4.0"
+    quotes:
+      - id: actadd_definition
+        text: "we introduce activation engineering: the inference-time modification of activations in order to control (or steer) model outputs."
+        location: "Abstract"
+      - id: actadd_single_pair
+        text: "it does not require any machine optimization and works with a single pair of data points"
+        location: "Abstract"
+      - id: actadd_bias_terms
+        text: "These vectors act like “virtual bias terms” because ActAdd directly adds the steering vectors to the forward pass at inference time."
+        location: "Section 1"
+      - id: actadd_padding
+        text: "The contrast pair can be of arbitrary lengths (empirically, right-padding the shorter prompt using whitespace gives good results)."
+        location: "Appendix C"
+      - id: actadd_coeff_limit
+        text: "The injection coefficient cannot be increased indefinitely, as shown by our coefficient sweeps (see Appendix Table 7)."
+        location: "Appendix C"
+      - id: actadd_api_access
+        text: "ActAdd is not immediately applicable given only API access to a model."
+        location: "Section 5 (Limitations)"
+
+  - id: turner2023lw
+    short: "Turner et al. 2023, LessWrong"
+    citation: "Turner, A. M., Thiergart, L., Udell, D., Leech, G., Mini, U., MacDiarmid, M. (2023). Steering GPT-2-XL by adding an activation vector. LessWrong / AI Alignment Forum."
+    url: "https://www.lesswrong.com/posts/5spBue2z2tw4JuDCx/steering-gpt-2-xl-by-adding-an-activation-vector"
+    fetch_url: "https://www.greaterwrong.com/posts/5spBue2z2tw4JuDCx/steering-gpt-2-xl-by-adding-an-activation-vector"
+    license: "all rights reserved (no license stated)"
+    quotes:
+      - id: lw_love_hate_setup
+        text: "\"Love\" - \"Hate\" before attention layer 6 with coefficient +5"
+        location: "Section 'Demonstrations'"
+      - id: lw_cherry_picked
+        text: "We slightly (best-of-3) cherry-picked our results in order to make the post shorter."
+        location: "Introduction"
+
+  - id: actadd_code
+    short: "montemac/activation_additions (MIT)"
+    citation: "Turner, A. M., MacDiarmid, M., et al. activation_additions: code for ActAdd (GitHub repository, MIT license)."
+    url: "https://github.com/montemac/activation_additions"
+    fetch_url: "https://raw.githubusercontent.com/montemac/activation_additions/main/README.md"
+    license: "MIT"
+    quotes:
+      - id: code_sampling_kwargs
+        text: "temperature=1, freq_penalty=1, top_p=.3"
+        location: "README, 'Using ActivationAdditions to generate modified completions'"
+      - id: code_love_vector
+        text: "love_rp = ActivationAddition(prompt=\"Love\", coeff=5, act_name=\"blocks.6.hook_resid_pre\")"
+        location: "README"
+
+  - id: panickssery2024caa
+    short: "Rimsky et al. 2024 (CAA), ACL"
+    citation: "Rimsky (Panickssery), N., Gabrieli, N., Schulz, J., Tong, M., Hubinger, E., Turner, A. M. (2024). Steering Llama 2 via Contrastive Activation Addition. Proceedings of ACL 2024 (Long Papers), 15504-15522. arXiv:2312.06681."
+    url: "https://aclanthology.org/2024.acl-long.828/"
+    fetch_url: "https://arxiv.org/html/2312.06681v4"
+    license: "CC BY 4.0"
+    quotes:
+      - id: caa_definition
+        text: "CAA computes “steering vectors” by averaging the difference in residual stream activations between pairs of positive and negative examples of a particular behavior, such as factual versus hallucinatory responses."
+        location: "Abstract"
+      - id: caa_positions
+        text: "these steering vectors are added at all token positions after the user’s prompt"
+        location: "Abstract"
+
+  - id: subramani2022
+    short: "Subramani et al. 2022, Findings of ACL"
+    citation: "Subramani, N., Suresh, N., Peters, M. E. (2022). Extracting Latent Steering Vectors from Pretrained Language Models. Findings of ACL 2022, 566-581. arXiv:2205.05124."
+    url: "https://aclanthology.org/2022.findings-acl.48/"
+    fetch_url: "https://ar5iv.labs.arxiv.org/html/2205.05124"
+    license: "CC BY 4.0"
+    quotes:
+      - id: subramani_add
+        text: "During decoding, we add our steering vector to the hidden states of the language model to generate the target sentence."
+        location: "Section 1"
+
+  - id: mikolov2013naacl
+    short: "Mikolov et al. 2013, NAACL"
+    citation: "Mikolov, T., Yih, W., Zweig, G. (2013). Linguistic Regularities in Continuous Space Word Representations. Proceedings of NAACL-HLT 2013, 746-751."
+    url: "https://aclanthology.org/N13-1090/"
+    fetch_url: "https://aclanthology.org/N13-1090.pdf"
+    license: "ACL Anthology (pre-2016, no CC license)"
+    quotes:
+      - id: mikolov_king_queen
+        text: "\"King - Man + Woman\" results in a vector very close to \"Queen.\""
+        location: "Abstract, p. 746"
+
+  - id: park2024lrh
+    short: "Park et al. 2024, ICML"
+    citation: "Park, K., Choe, Y. J., Veitch, V. (2024). The Linear Representation Hypothesis and the Geometry of Large Language Models. ICML 2024. arXiv:2311.03658."
+    url: "https://arxiv.org/abs/2311.03658"
+    fetch_url: "https://arxiv.org/html/2311.03658"
+    license: "CC BY-NC-SA 4.0"
+    quotes:
+      - id: park_lrh
+        text: "high-level concepts are represented linearly as directions in some representation space"
+        location: "Abstract"
+
+  - id: elhage2021framework
+    short: "Elhage et al. 2021, Transformer Circuits"
+    citation: "Elhage, N., Nanda, N., Olsson, C., et al. (2021). A Mathematical Framework for Transformer Circuits. Transformer Circuits Thread."
+    url: "https://transformer-circuits.pub/2021/framework/index.html"
+    license: "no license stated"
+    quotes:
+      - id: elhage_residual_sum
+        text: "simply the sum of the output of all the previous layers and the original embedding"
+        location: "Section 'Virtual Weights and the Residual Stream as a Communication Channel'"
+
+  - id: radford2019gpt2
+    short: "Radford et al. 2019 (GPT-2)"
+    citation: "Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., Sutskever, I. (2019). Language Models are Unsupervised Multitask Learners. OpenAI technical report."
+    url: "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf"
+    license: "no license stated"
+    quotes:
+      - id: gpt2_vocab
+        text: "The vocabulary is expanded to 50,257."
+        location: "Section 2.3"
+
+  - id: arditi2024refusal
+    short: "Arditi et al. 2024, NeurIPS"
+    citation: "Arditi, A., Obeso, O., Syed, A., Paleka, D., Panickssery, N., Gurnee, W., Nanda, N. (2024). Refusal in Language Models Is Mediated by a Single Direction. NeurIPS 2024. arXiv:2406.11717."
+    url: "https://arxiv.org/abs/2406.11717"
+    fetch_url: "https://arxiv.org/html/2406.11717"
+    license: "arXiv non-exclusive"
+    quotes:
+      - id: arditi_one_dim
+        text: "refusal is mediated by a one-dimensional subspace"
+        location: "Abstract"
+
+  - id: tan2024generalization
+    short: "Tan et al. 2024, NeurIPS"
+    citation: "Tan, D., Chanin, D., Lynch, A., Kanoulas, D., Paige, B., Garriga-Alonso, A., Kirk, R. (2024). Analyzing the Generalization and Reliability of Steering Vectors. NeurIPS 2024. arXiv:2407.12404."
+    url: "https://arxiv.org/abs/2407.12404"
+    fetch_url: "https://arxiv.org/html/2407.12404"
+    license: "CC BY 4.0"
+    quotes:
+      - id: tan_variable
+        text: "In-distribution, steerability is highly variable across different inputs."
+        location: "Abstract"
+      - id: tan_anti_steerable
+        text: "Many of these datasets have almost half of the inputs being anti-steerable, implying that the effect of steering is highly unreliable."
+        location: "Section 5 (Evaluating Steering Vector Reliability)"
+
+  - id: li2023iti
+    short: "Li et al. 2023 (ITI), NeurIPS"
+    citation: "Li, K., Patel, O., Viegas, F., Pfister, H., Wattenberg, M. (2023). Inference-Time Intervention: Eliciting Truthful Answers from a Language Model. NeurIPS 2023. arXiv:2306.03341."
+    url: "https://arxiv.org/abs/2306.03341"
+    fetch_url: "https://arxiv.org/html/2306.03341"
+    license: "CC BY 4.0"
+    quotes:
+      - id: iti_definition
+        text: "ITI operates by shifting model activations during inference, following a set of directions across a limited number of attention heads."
+        location: "Abstract"
+
+  - id: zou2023repe
+    short: "Zou et al. 2023 (RepE)"
+    citation: "Zou, A., Phan, L., Chen, S., et al. (2023). Representation Engineering: A Top-Down Approach to AI Transparency. arXiv:2310.01405."
+    url: "https://arxiv.org/abs/2310.01405"
+    fetch_url: "https://arxiv.org/html/2310.01405"
+    license: "arXiv non-exclusive"
+    quotes:
+      - id: repe_definition
+        text: "a top-down approach to AI transparency called representation engineering (RepE)"
+        location: "Figure 1 caption"
+
+  - id: templeton2024scaling
+    short: "Templeton et al. 2024, Transformer Circuits"
+    citation: "Templeton, A., Conerly, T., Marcus, J., et al. (2024). Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet. Transformer Circuits Thread."
+    url: "https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html"
+    license: "no license stated"
+    quotes:
+      - id: templeton_clamp
+        text: "\"clamp\" specific features of interest to artificially high or low values during the forward pass"
+        location: "Section 'Feature steering'"
+
+  - id: anthropic2024goldengate
+    short: "Anthropic 2024, Golden Gate Claude"
+    citation: "Anthropic (2024, May 23). Golden Gate Claude. anthropic.com/news."
+    url: "https://www.anthropic.com/news/golden-gate-claude"
+    license: "no license stated"
+    quotes:
+      - id: goldengate_surgical
+        text: "surgical change to some of the most basic aspects of the model's internal activations"
+        location: "Body"
+
+  - id: chen2025persona
+    short: "Chen et al. 2025 (Persona Vectors)"
+    citation: "Chen, R., Arditi, A., Sleight, H., Evans, O., Lindsey, J. (2025). Persona Vectors: Monitoring and Controlling Character Traits in Language Models. arXiv:2507.21509."
+    url: "https://arxiv.org/abs/2507.21509"
+    fetch_url: "https://arxiv.org/html/2507.21509"
+    license: "arXiv non-exclusive"
+    quotes:
+      - id: persona_mean_diff
+        text: "computed as the difference in mean activations between responses exhibiting the target trait"
+        location: "Abstract"
+
+  # ---- cited without on-screen quotes (methods, data, software) ----
+  - id: vaswani2017
+    short: "Vaswani et al. 2017, NeurIPS"
+    citation: "Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention Is All You Need. NeurIPS 2017. arXiv:1706.03762."
+    url: "https://arxiv.org/abs/1706.03762"
+    license: "arXiv non-exclusive"
+  - id: maas2011imdb
+    short: "Maas et al. 2011 (IMDb)"
+    citation: "Maas, A. L., Daly, R. E., Pham, P. T., Huang, D., Ng, A. Y., Potts, C. (2011). Learning Word Vectors for Sentiment Analysis. ACL 2011, 142-150."
+    url: "https://aclanthology.org/P11-1015/"
+    license: "citation only"
+  - id: hartmann2023siebert
+    short: "Hartmann et al. 2023 (SiEBERT)"
+    citation: "Hartmann, J., Heitmann, M., Siebert, C., Schamp, C. (2023). More than a Feeling: Accuracy and Application of Sentiment Analysis. International Journal of Research in Marketing 40(1), 75-87."
+    url: "https://huggingface.co/siebert/sentiment-roberta-large-english"
+    license: "citation only"
+  - id: holm1979
+    short: "Holm 1979"
+    citation: "Holm, S. (1979). A Simple Sequentially Rejective Multiple Test Procedure. Scandinavian Journal of Statistics 6(2), 65-70."
+    url: "https://www.jstor.org/stable/4615733"
+    license: "citation only"
+  - id: efron1993bootstrap
+    short: "Efron & Tibshirani 1993"
+    citation: "Efron, B., Tibshirani, R. J. (1993). An Introduction to the Bootstrap. Chapman & Hall/CRC."
+    url: "https://doi.org/10.1201/9780429246593"
+    license: "citation only"

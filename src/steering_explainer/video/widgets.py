@@ -14,8 +14,9 @@ import json
 import re
 import textwrap
 from functools import lru_cache
+from pathlib import Path
 
-from manim import (BOLD, DOWN, ITALIC, LEFT, RIGHT, UP, Arrow, FadeIn, FadeOut, Line, MathTex, NumberPlane,
+from manim import (BOLD, config, DOWN, ITALIC, LEFT, RIGHT, UP, Arrow, FadeIn, FadeOut, Line, MathTex, NumberPlane,
                    Rectangle, RoundedRectangle, Text, VGroup)
 from manim_voiceover import VoiceoverScene
 import yaml
@@ -49,16 +50,16 @@ def example() -> dict:
 
 
 @lru_cache
-def study() -> dict:
-    """Pre-registered study summary (study/analyze.py); empty until the study has run."""
-    path = ROOT / "data" / "study" / "summary.json"
+def study(name: str = "summary") -> dict:
+    """Pre-registered study summaries (study/analyze.py): "summary" = exp01, "exp02_summary" = exp02."""
+    path = ROOT / "data" / "study" / f"{name}.json"
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
 
 
 def narration_values() -> dict:
     """Placeholder values for script.yaml, computed from the JSON results (see docs/storyboard.md)."""
     from steering_explainer.video.narration_values import compute  # kept separate: pure data -> strings
-    return compute(example(), study())
+    return compute(example(), study(), study("exp02_summary"))
 
 
 class ChapterScene(VoiceoverScene):
@@ -69,7 +70,8 @@ class ChapterScene(VoiceoverScene):
     def setup(self):
         s = load_settings()  # PATH (MiKTeX) + voice settings from .env
         self.camera.background_color = T.BG
-        self.set_speech_service(EdgeTTSService(voice=s.tts_voice, rate=s.tts_rate))
+        cache = Path(config.media_dir) / "voiceovers" / self.CHAPTER  # per-chapter cache: parallel renders never share cache.json
+        self.set_speech_service(EdgeTTSService(voice=s.tts_voice, rate=s.tts_rate, cache_dir=str(cache)))
         self.beats = script()[self.CHAPTER]["beats"]
         self.values = narration_values()
         self.footer = None

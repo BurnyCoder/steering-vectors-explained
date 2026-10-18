@@ -60,7 +60,7 @@ class Ch07(ChapterScene):
                 part = VGroup(*[eq[i] for i in idx])
                 self.play(Write(part) if k < 3 else Write(VGroup(eq[0], eq[1])))
                 b = Brace(part, DOWN, color=T.FG2)
-                t = text(label, T.SIZE_SMALL, T.FG2).next_to(b, DOWN, buff=0.1)
+                t = text(label, T.SIZE_BODY, T.FG2).next_to(eq, DOWN, buff=0.9).set_x(0)  # centred: never off-frame
                 self.play(FadeIn(b), FadeIn(t))
                 self.wait(0.4)
                 self.play(FadeOut(b), FadeOut(t))
@@ -70,7 +70,7 @@ class Ch07(ChapterScene):
 
         with self.say("toy"):
             md = toy.mean_difference()
-            pl = plane((-1, 3), (-1, 1), 1.4).shift(LEFT * 2.6 + DOWN * 0.2)
+            pl = plane((-1, 3), (-1, 1), 1.7).shift(LEFT * 2.8 + DOWN * 0.2)
             diffs = [arrow(pl, d, T.FG2) for d in md["diffs"]]
             mean = arrow(pl, md["v"], T.STEER)
             rows = VGroup(*[MathTex(tup(d), font_size=36, color=T.FG2) for d in md["diffs"]],

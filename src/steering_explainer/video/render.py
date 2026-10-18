@@ -22,7 +22,8 @@ from steering_explainer.log import get_logger
 from steering_explainer.video.widgets import registry, script
 
 log = get_logger(__name__)
-QUALITY_DIR = {"l": "480p15", "m": "720p30", "h": "1080p60", "k": "2160p60"}  # Manim's output folder names
+QUALITY_DIR = {"l": "480p15", "m": "720p30", "f": "1080p30", "h": "1080p60", "k": "2160p60"}  # Manim's output folder names
+QUALITY_FLAGS = {"f": ["-r", "1920,1080", "--frame_rate", "30"]}  # "f" = full HD at 30 fps (half the frames of -qh)
 SCENES = Path(__file__).parent / "scenes"
 
 
@@ -56,8 +57,8 @@ def render_chapters(s: Settings, only: list[str] | None = None) -> list[Path]:
     outs = []
     for path in chapter_files():
         if not only or path.stem[:4] in only:
-            _run([sys.executable, "-m", "manim", f"-q{s.render_quality}", "--media_dir", str(s.root / "media"),
-                  str(path), _class_name(path)])
+            q = QUALITY_FLAGS.get(s.render_quality, [f"-q{s.render_quality}"])
+            _run([sys.executable, "-m", "manim", *q, "--media_dir", str(s.root / "media"), str(path), _class_name(path)])
         outs.append(chapter_video(s, path))
     return outs
 

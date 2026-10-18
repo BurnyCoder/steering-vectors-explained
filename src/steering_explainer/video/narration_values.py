@@ -1,9 +1,10 @@
 """narration_values.py — turn the JSON results into the strings spoken in data/script.yaml.
 
 Global context: script beats contain {placeholders}; this pure function computes their values from
-data/practical_example.json (steering/example.py) and data/study/summary.json (study/analyze.py),
-so the narration can never drift from the measured numbers. Missing study results produce an
-explicit "pending" sentence instead of a made-up number.
+data/practical_example.json (steering/example.py), data/study/summary.json (experiment 01) and
+data/study/exp02_summary.json (experiment 02, pre-registered replication). Sentence variants are
+chosen by the data (e.g. where positivity peaks, whether α = −5 lowered it), never by hand.
+Missing results produce an explicit "pending" sentence instead of a made-up number.
 """
 
 PENDING = "The study results are pending."
@@ -14,35 +15,60 @@ def _tok(s: str) -> str:
     return s.strip()
 
 
-def compute(ex: dict, st: dict) -> dict:
-    v = {}
-    if ex:
-        m = ex["model"]
-        v["d_model"] = f"{m['d_model']:,}"  # 1,600
-        v["n_layers"] = str(m["n_layers"])  # 48
-        v["vocab"] = f"{m['d_vocab']:,}"  # 50,257
-        v["n_params_b"] = f"{m['n_params'] / 1e9:.1f}"  # ≈ 1.6
-        hate_pos = ex["tokens_prompt"].index(" hate")  # position of " hate" in "<|endoftext|>I hate you because"
-        v["h_norm_hate"] = f"{ex['h_prompt_norm_per_pos'][hate_pos]:.1f}"
-        top = ex["next_token"]["unsteered_top5"][0]
-        v["top1_token"], v["top1_prob"] = _tok(top[0]), f"{top[1]:.2f}"
-        v["h_plus_norm"], v["h_minus_norm"] = f"{ex['h_plus_norm']:.0f}", f"{ex['h_minus_norm']:.0f}"
-        v["cos"] = f"{ex['cos_plus_minus']:.2f}"
-        v["hA_norm"] = f"{ex['h_A_norm_per_pos'][1]:.1f}"
-        v["gain1"] = _tok(ex["next_token"]["largest_gains"][0][0])
-    if st:
-        pp = st["means"]["p_pos"]
-        p0, p5, r5 = pp["steer_0"][0], pp["steer_5"][0], pp["random_5"][0]
-        pr = st["primary"]
-        v["n_prompts"] = str(st["n_prompts"])
-        v["result_sentence"] = (f"Average positivity was {p0:.2f} without steering and {p5:.2f} at alpha five, "
-                                f"while random directions of the same size gave {r5:.2f}.")
-        v["verdict_sentence"] = (f"At alpha five, steering minus random is {pr['mean']:+.2f}, with a confidence interval "
-                                 f"from {pr['lo']:+.2f} to {pr['hi']:+.2f}, so our pre-registered main hypothesis is "
-                                 f"{pr['verdict']}.")
-        fl = st["fluency"]
-        v["cost_sentence"] = (f"At alpha fifteen it rose by {fl['steer_15']['mean']:.2f} per token, compared with "
-                              f"{fl['random_15']['mean']:.2f} for random directions of the same size.")
+def _example_values(ex: dict) -> dict:
+    m = ex["model"]
+    hate_pos = ex["tokens_prompt"].index(" hate")  # position of " hate" in "<|endoftext|>I hate you because"
+    top = ex["next_token"]["unsteered_top5"][0]
+    return {"d_model": f"{m['d_model']:,}", "n_layers": str(m["n_layers"]), "vocab": f"{m['d_vocab']:,}",
+            "n_params_b": f"{m['n_params'] / 1e9:.1f}", "h_norm_hate": f"{ex['h_prompt_norm_per_pos'][hate_pos]:.1f}",
+            "top1_token": _tok(top[0]), "top1_prob": f"{top[1]:.2f}",
+            "h_plus_norm": f"{ex['h_plus_norm']:.0f}", "h_minus_norm": f"{ex['h_minus_norm']:.0f}",
+            "cos": f"{ex['cos_plus_minus']:.2f}", "hA_norm": f"{ex['h_A_norm_per_pos'][1]:.1f}",
+            "gain1": _tok(ex["next_token"]["largest_gains"][0][0])}
+
+
+def _study_values(st1: dict, st2: dict) -> dict:
+    pp = st2["means"]["p_pos"]
+    steer = {float(k.split("_")[1]): v[0] for k, v in pp.items() if k.startswith("steer_")}
+    peak = max(steer, key=steer.get)  # α with the highest mean positivity
+    top = max(steer)  # largest α tested
+    pr2 = st2["primary"]
+    h1_2 = next(t for t in st2["secondary"] if t["contrast"] == "steer_5 - random_5")
+    neg = st2["h3_sign"]
+    both = st1["primary"]["lo"] > 0 and h1_2["lo"] > 0  # steer − random CI above 0 in exp01 (primary) and exp02 (secondary)
+    vs_random = "steering beat random directions in both runs" if both else "steering did not reliably beat random directions"
+    shape = (f"But more is not always better: positivity peaked at alpha {peak:g} and fell back at {top:g}."
+             if peak < top else f"Positivity kept rising up to alpha {top:g}.")
+    sign = ("And the negative alpha did not make text less positive."
+            if neg["mean"] >= 0 or neg["p_holm"] >= 0.05 else "A negative alpha made text less positive.")
+    return {
+        "design_sentence": (f"A first run used {st1['n_prompts']} openings of real movie reviews; a second run, sized "
+                            f"using the first, used {st2['n_prompts']} new ones. Each opening was continued under six "
+                            f"values of alpha, three times each."),
+        "result_sentence": (f"In the larger run, average positivity was {steer[0.0]:.2f} without steering and "
+                            f"{steer[5.0]:.2f} at alpha five, while random directions of the same size gave "
+                            f"{pp['random_5'][0]:.2f}."),
+        "verdict_sentence": (f"Steering minus no steering at alpha five is {pr2['mean']:+.2f}, with an interval from "
+                             f"{pr2['lo']:+.2f} to {pr2['hi']:+.2f}: our main hypothesis is {pr2['verdict']}, and "
+                             f"{vs_random}. {shape} {sign}"),
+        "cost_sentence": (f"At alpha fifteen it rose by {st2['fluency']['steer_15']['mean']:.2f} per token, compared with "
+                          f"{st2['fluency']['random_15']['mean']:.2f} for random directions of the same size."),
+    }
+
+
+def _toy_values() -> dict:
+    """Spoken toy numbers, computed by video/toy.py (pinned by tests/test_toy.py)."""
+    from steering_explainer.video import toy
+    p = toy.softmax([2, 1, 0])
+    st = toy.steering_toy()
+    return {"norm_b": f"{toy.norm(toy.B):.2f}", "softmax_210": f"{p[0]:.3f}, {p[1]:.3f} and {p[2]:.3f}",
+            "toy_love_before": f"{st['p_before'][0]:.2f}", "toy_love_after": f"{st['p_after'][0]:.2f}"}
+
+
+def compute(ex: dict, st1: dict, st2: dict | None = None) -> dict:
+    v = _toy_values() | (_example_values(ex) if ex else {})
+    if st1 and st2:
+        v.update(_study_values(st1, st2))
     else:
-        v.update(n_prompts="several hundred", result_sentence=PENDING, verdict_sentence="", cost_sentence="")
+        v.update(design_sentence="", result_sentence=PENDING, verdict_sentence="", cost_sentence="")
     return v

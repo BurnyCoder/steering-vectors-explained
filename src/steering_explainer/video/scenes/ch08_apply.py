@@ -84,6 +84,7 @@ class Ch08(ChapterScene):
             g_l = text(f"largest next-token probability gains after “{ex['prompt']}” (α = +{ex['coeff']:g} vs 0)", T.SIZE_SMALL, T.FG2)
             gv = VGroup(g_l, g).arrange(DOWN, aligned_edge=LEFT, buff=0.3).next_to(setup, DOWN, buff=0.5)
             self.play(FadeIn(setup)); self.play(FadeIn(gv))
+            self.wait_until_bookmark("cont")
             self.play(FadeOut(gv))
             c0 = ex["completions"][0]
             cols = VGroup(VGroup(text("α = 0 (unsteered)", T.SIZE_SMALL, T.FG2), text("…" + _clean(c0["unsteered"]), T.SIZE_SMALL - 2, T.FG, 42)).arrange(DOWN, aligned_edge=LEFT),
@@ -92,5 +93,7 @@ class Ch08(ChapterScene):
             if cols.width > 13:
                 cols.scale_to_fit_width(13)
             note = quote_card("lw_cherry_picked", width=90, size=20).to_edge(DOWN, buff=0.6)
-            self.play(FadeIn(cols)); self.play(FadeIn(note))
+            self.play(FadeIn(cols))
+            self.wait_until_bookmark("note")
+            self.play(FadeIn(note))
         self.wait(0.5)

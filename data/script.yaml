@@ -1,7 +1,7 @@
 # script.yaml — the narration of the video, chapter by chapter, beat by beat.
 # Global context: each scene (src/steering_explainer/video/scenes/chXX_*.py) speaks its beats with
 # `self.say("<beat id>")`; {placeholders} are filled from data/practical_example.json and
-# data/study/summary.json by video/narration_values.py, so every spoken number is computed, never typed.
+# data/study/*summary.json by video/narration_values.py, so every spoken number is computed, never typed.
 # tests/test_script.py checks (1) every glossary term is first used in the chapter that defines it
 # (data/glossary.yaml) and (2) every beat a scene speaks exists here.
 chapters:
@@ -10,295 +10,270 @@ chapters:
     beats:
       - id: intro
         text: >
-          Here is a real experiment. A language model is a program that continues text. We give one,
-          called GPT-2 XL, the start of a sentence, which we call the prompt: "I hate you because".
-          Left alone, it continues like this.
+          A real experiment. A language model is a program that continues text. We give one, GPT-2 XL,
+          the start of a sentence, called the prompt: "I hate you because". Left alone, it continues like this.
       - id: steered
         text: >
-          Now we run it again with the same random choices, but this time we add one fixed list of
-          numbers inside the model while it reads. Same prompt, and the model itself is unchanged. Here is the new continuation.
+          Now we run it again with the same random choices, but we add one fixed list of numbers inside
+          the model while it reads. Same prompt, same model. Here is the new continuation.
       - id: name
         text: >
-          A list of numbers like this is called a vector. A vector that changes a model's behavior when
-          you add it inside the model is called a steering vector.
+          A list of numbers is called a vector. A vector that changes a model's behavior when you add it
+          inside the model is called a steering vector.
       - id: objects
         text: >
-          These two lines are the whole idea. The first builds a steering vector; the second adds it.
-          Right now they are just symbols. By the end of this video, every symbol here will be defined
-          from scratch, each with a worked example.
+          These two lines are the whole idea: the first builds a steering vector, the second adds it. By the
+          end of this video, every symbol here will be defined from scratch, each with a worked example.
 
   - id: ch01
     title: "1 · Numbers and vectors"
     beats:
       - id: scalar
         text: >
-          Let's start at the beginning. A scalar is a single real number, such as 3, minus one half,
-          or 0.665. The set of all real numbers is written as a double-struck R. The symbol that looks
-          like a rounded E reads "is an element of": 3 is an element of R.
+          A scalar is a single real number, like 3, minus one half, or 0.665. The set of all real numbers is
+          written as a double-struck R. The rounded E reads "is an element of": 3 is an element of R.
       - id: vector
         text: >
-          A vector is an ordered list of real numbers. Each entry is called a component. The vector
-          two, one has first component 2 and second component 1. We can draw it as an arrow from the
-          origin: two steps right, one step up.
+          A vector is an ordered list of real numbers. Each entry is a component. The vector two, one has
+          first component 2 and second component 1. Drawn as an arrow: two steps right, one step up.
       - id: dimension
         text: >
-          The number of components is the dimension, written d. The set of all vectors with d real
-          components is written R to the d. So two, one is an element of R two.
+          The number of components is the dimension, written d. All vectors with d real components form
+          the set R to the d. So two, one is an element of R two.
       - id: practical
         text: >
-          Inside GPT-2 XL, every piece of text is represented by vectors with d equal to {d_model}
-          components. Those vectors are computed using about {n_params_b} billion numbers, called
-          parameters or weights, that the model learned from text in a process called training.
+          Inside GPT-2 XL, text is represented by vectors with d equal to {d_model} components. They are
+          computed using about {n_params_b} billion numbers, called parameters or weights, learned from
+          text in a process called training.
 
   - id: ch02
     title: "2 · Vector arithmetic"
     beats:
       - id: add
         text: >
-          Vectors have arithmetic. Take a equal to one, two, and b equal to three, minus one. Addition
-          adds matching components: a plus b is four, one. In the picture, we place b's tail at a's tip.
+          Take a equal to one, two, and b equal to three, minus one. Addition adds matching components:
+          a plus b is four, one. In the picture, b's tail sits at a's tip.
       - id: scale
         text: >
-          Multiplying a vector by a scalar multiplies every component. Two times b is six, minus two:
-          the same direction, twice as long. A negative scalar flips the direction.
+          Multiplying by a scalar multiplies every component. Two times b is six, minus two: same direction,
+          twice as long. A negative scalar flips the direction.
       - id: sub
         text: >
-          Subtraction adds the flipped vector: a minus b is minus two, three. It is the arrow from the
-          tip of b to the tip of a. So the difference of two vectors is itself a vector.
+          Subtraction adds the flipped vector: a minus b is minus two, three, the arrow from the tip of b
+          to the tip of a. The difference of two vectors is itself a vector.
       - id: sum_mean
         text: >
-          The capital Greek letter sigma means: add up every term. The mean, or average, of n vectors
-          is their sum multiplied by one over n. The mean of one, two and three, four is two, three.
+          The Greek capital sigma means: add up every term. The mean, or average, of n vectors is their sum
+          times one over n. The mean of one, two and three, four is two, three.
       - id: dot_norm
         text: >
-          The dot product multiplies matching components and adds the results into one scalar. a dot b
-          is one times three, plus two times minus one, which is 1. The norm, written with double bars,
-          is a vector's length: the square root of the vector dotted with itself. The norm of b is the
-          square root of ten, about 3.16. Dividing a vector by its norm gives a unit vector, of length
-          one, which describes a pure direction.
+          The dot product multiplies matching components and adds the results into one scalar: a dot b is
+          one times three plus two times minus one, which is 1. The norm, written with double bars, is a
+          vector's length: the square root of the vector dotted with itself. The norm of b is the square
+          root of ten, about {norm_b}. Dividing a vector by its norm gives a unit vector, of length one: a pure direction.
 
   - id: ch03
     title: "3 · From text to vectors"
     beats:
       - id: function
         text: >
-          A function takes each input to exactly one output. We write f from X to Y for a function
-          that takes elements of a set X to elements of a set Y.
+          A function takes each input to exactly one output. f from X to Y takes elements of a set X to
+          elements of a set Y.
       - id: tokens
         text: >
-          A language model doesn't read letters. A tokenizer, a fixed function, cuts text into tokens,
-          which are words or pieces of words, and gives each token a whole-number ID. The set of all
-          tokens is the vocabulary, written V. Vertical bars around a set mean its size, the number
-          of its elements. GPT-2's vocabulary has {vocab} tokens.
+          A language model doesn't read letters. A tokenizer, a fixed function, cuts text into tokens, words
+          or pieces of words, each with a whole-number ID. The set of all tokens is the vocabulary, V, and
+          bars around a set mean its size. GPT-2's vocabulary has {vocab} tokens.
       - id: example
         text: >
-          Our prompt becomes these tokens. GPT-2 also starts every text with a special token called
-          end-of-text. Each token's place in the sequence is its position, written t, counting from zero.
+          Our prompt becomes these tokens. GPT-2 also starts every text with a special end-of-text token.
+          A token's place in the sequence is its position, t, counting from zero.
       - id: embedding
         text: >
-          An embedding is a function from tokens to vectors. It looks up one learned vector in R d for
-          each token, and adds another learned vector for its position. In a toy, three-token
-          vocabulary, the token "love" might map to one, zero. After this step, the text is a sequence
-          of vectors, one per position.
+          An embedding is a function from tokens to vectors: it looks up a learned vector in R d for each
+          token and adds another for its position. In a toy, three-token vocabulary, "love" might map to
+          one, zero. Now the text is a sequence of vectors, one per position.
 
   - id: ch04
     title: "4 · Layers and the residual stream"
     beats:
       - id: layers
         text: >
-          Next, the model processes these vectors in a fixed number of steps called layers. GPT-2 XL
-          has L equal to {n_layers} layers, numbered with the letter ell, from zero to L minus one.
+          The model then processes these vectors in a fixed number of steps called layers. GPT-2 XL has L
+          equal to {n_layers}, numbered by ell from zero to L minus one.
       - id: parts
         text: >
-          Each layer has two parts, and each part is a function. Attention lets every position gather
-          information from earlier positions. The MLP, short for multilayer perceptron, transforms each
-          position's vector on its own. For steering, their inner formulas don't matter. What matters
-          is where their outputs go.
+          Each layer has two parts, both functions. Attention lets every position gather information from
+          earlier positions; the MLP, a multilayer perceptron, transforms each position's vector on its own.
       - id: residual
         text: >
-          Each part adds its output onto a running vector at every position, called the residual
-          stream. Leaving out a normalization step that rescales vectors, a layer computes: h sub ell
-          plus one equals h sub ell, plus attention's output, plus the MLP's output. In the words of
-          Elhage and colleagues, the residual stream is simply the sum of the output of all the
-          previous layers and the original embedding.
+          Both add their outputs onto a running vector at every position: the residual stream. Leaving out
+          a rescaling step called normalization, h sub ell plus one is h sub ell, plus attention's output,
+          plus the MLP's output. As Elhage and colleagues put it, the residual stream
+          is simply the sum of the output of all the previous layers and the original embedding.
       - id: toy
         text: >
-          In two dimensions: the embedding starts the stream at one, zero. Attention writes zero, one,
-          giving one, one. The MLP writes one half, minus one half, giving one and a half, one half.
+          In two dimensions: the stream starts at one, zero. Attention writes zero, one, giving one, one.
+          The MLP writes one half, minus one half, giving one and a half, one half.
       - id: activation
         text: >
-          We write h sub ell, with superscript t, for the residual stream entering layer ell at position t.
-          Numbers computed inside a model like this are called activations, and one run through all the
-          layers is called a forward pass. In GPT-2 XL, the stream entering layer 6 at the token "hate"
-          is a vector in R {d_model} with norm {h_norm_hate}.
+          h sub ell, superscript t, is the residual stream entering layer ell at position t. Numbers computed
+          inside a model like this are activations; one run through all layers is a forward pass. In GPT-2 XL,
+          the stream entering layer 6 at "hate" has norm {h_norm_hate}.
 
   - id: ch05
     title: "5 · From vectors back to words"
     beats:
       - id: matrix
         text: >
-          To turn the final vector back into text, the model uses a matrix, a rectangular grid of
-          numbers. Multiplying a matrix by a vector takes the dot product of each row with the vector,
-          giving one number per row.
+          To turn the final vector back into text, the model uses a matrix, a rectangular grid of numbers.
+          Matrix times vector takes the dot product of each row with the vector: one number per row.
       - id: logits
         text: >
-          The unembedding matrix, W sub U, has one row for every token in the vocabulary. Multiplying it
-          by the final residual stream gives one score per token. These scores are called logits.
+          The unembedding matrix, W sub U, has one row per vocabulary token. Times the final residual
+          stream, it gives one score per token, called a logit.
       - id: softmax
         text: >
-          Softmax turns logits into probabilities: raise e to the power of each logit, then divide by
-          the total. Logits two, one, zero become probabilities 0.665, 0.245 and 0.090. All positive,
-          and they add up to one.
+          Softmax turns logits into probabilities: raise e to each logit, then divide by the total. Logits
+          two, one, zero become {softmax_210}: all positive, summing to one.
       - id: sampling
         text: >
-          The model then samples: it picks the next token at random according to those probabilities,
-          appends it, and repeats. That is how it writes. After our prompt, GPT-2 XL's most likely next
-          token is "{top1_token}", with probability {top1_prob}.
+          The model then samples: it picks the next token at random with those probabilities, appends it,
+          and repeats. After our prompt, GPT-2 XL's most likely next token is "{top1_token}", with probability
+          {top1_prob}.
 
   - id: ch06
     title: "6 · Concepts as directions"
     beats:
       - id: hypothesis
         text: >
-          Why would adding a vector change behavior? Recall that a unit vector describes a direction.
-          The linear representation hypothesis is the idea that high-level concepts are represented
-          linearly as directions in some representation space.
+          Why would adding a vector change behavior? A unit vector describes a direction, and the linear
+          representation hypothesis is the idea that high-level concepts are represented linearly as
+          directions in some representation space.
       - id: mikolov
         text: >
-          An early clue came from word vectors. Mikolov and colleagues reported that King minus Man
-          plus Woman results in a vector very close to Queen. The difference between Woman and Man
-          behaves like a direction for gender.
+          An early clue came from word vectors: Mikolov and colleagues reported that King minus Man plus
+          Woman results in a vector very close to Queen. Woman minus Man acts like a gender direction.
       - id: toy
         text: >
-          A toy picture: suppose one axis of a two-dimensional space meant how positive the text is.
-          Moving a vector along that axis would make later layers treat the text as more positive.
-          Steering looks for such directions and pushes along them. But it is a hypothesis: it can
-          hold for some concepts and layers, and fail for others.
+          A toy picture: if one axis meant how positive the text is, moving a vector along it would make
+          later layers treat the text as more positive. Steering looks for such directions and pushes along
+          them. But it is a hypothesis: it can hold for some concepts and layers, and fail for others.
 
   - id: ch07
     title: "7 · Building the steering vector"
     beats:
       - id: pair
         text: >
-          To find a direction, compare two inputs that differ mainly in the concept we care about: a
-          contrast pair, written p plus and p minus. Activation Addition, or ActAdd, by Turner and
-          colleagues, uses the prompts "Love" and "Hate". It needs no training: it works with a single
-          pair of data points.
+          To find a direction, compare two inputs that differ mainly in one concept: a contrast pair, p plus
+          and p minus. ActAdd, short for Activation Addition, by Turner and colleagues, uses "Love" and "Hate"
+          and needs no training: a single pair of data points.
       - id: actadd
         text: >
-          Run each prompt through the model, read the residual stream entering layer ell, and subtract:
-          h A equals h ell of p plus, minus h ell of p minus. That gives one difference vector per
-          position. If one prompt has fewer tokens, it is padded with spaces.
+          Run each prompt through the model, read the residual stream entering layer ell, and subtract: h A
+          equals h ell of p plus, minus h ell of p minus, one difference per position. GPT-2 splits "Hate"
+          into two tokens, so "Love" is padded with a space.
       - id: dataset
         text: >
-          One pair is noisy. So Contrastive Activation Addition, or CAA, by Rimsky and colleagues,
-          averages over a dataset D, which is a set of triples. Each triple holds a prompt p, a
-          completion c plus that shows the behavior, and a completion c minus that shows its opposite.
-          a sub ell of p and c is the residual stream at layer ell at the last token of the completion.
+          One pair is noisy. CAA, Contrastive Activation Addition, by Rimsky and colleagues, uses a dataset D
+          of triples: a prompt p, a completion c plus showing the behavior, and c minus showing its opposite.
+          a sub ell of p and c is the residual stream at layer ell at the completion's last token.
       - id: formula
         text: >
-          So the steering vector for layer ell is built like this: for each triple, take the difference
-          between the two activations; add those differences up with sigma; and multiply by one over the
-          size of D. It is a mean difference. ActAdd is the special case where D holds a single pair.
+          So: take each triple's difference of activations, add them up with sigma, and multiply by one over
+          the size of D. A mean difference. ActAdd is the case where D holds one pair.
       - id: toy
         text: >
-          A toy example with three triples in two dimensions. The differences are two point one, zero
-          point three; one point eight, minus zero point five; and two point one, zero point two. Their
-          mean is exactly two, zero. The shared direction survives, and the unrelated second component
-          averages out.
+          Toy example: differences two point one, zero point three; one point eight, minus zero point five;
+          two point one, zero point two. Their mean is exactly two, zero: the shared direction survives, the
+          unrelated component cancels.
       - id: real
         text: >
-          For real: in GPT-2 XL at layer 6, the "Love" and "Hate" activations have norms of about
-          {h_plus_norm} and {h_minus_norm}. The dot product of their unit vectors, called the cosine
-          similarity, is {cos}, so they point in nearly the same direction. Their difference has norm
-          {hA_norm}. At position zero both prompts have the end-of-text token, so the difference there
-          is exactly zero.
+          In GPT-2 XL at layer 6, the "Love" and "Hate" activations have norms of about {h_plus_norm} and
+          {h_minus_norm}, and cosine similarity, the dot product of their unit vectors, of {cos}. Their
+          difference has norm {hA_norm}. At position zero both share the end-of-text token, so the difference
+          there is exactly zero.
 
   - id: ch08
     title: "8 · Steering: adding the vector"
     beats:
       - id: formula
         text: >
-          Steering is a single addition. During the forward pass, at layer ell and at each chosen
-          position t, replace h with h plus alpha times v. h tilde is the steered activation. Alpha is a
-          scalar called the steering coefficient: its size sets the strength, and its sign sets the
-          direction, so a negative alpha pushes toward the opposite concept. The weights never change.
-          In the ActAdd paper's words, these vectors act like virtual bias terms.
+          Steering is one addition. During the forward pass, at layer ell and each chosen position t, h
+          becomes h plus alpha times v, the steered activation h tilde. Alpha is a scalar, the steering
+          coefficient: its size sets strength, its sign direction. The weights never change; in the ActAdd
+          paper's words, these vectors act like virtual bias terms.
       - id: positions
         text: >
-          T is the set of positions we edit. ActAdd adds h A at the first positions of the prompt, one
-          row per position. CAA adds its vector at all token positions after the user's prompt.
+          T is the set of edited positions. ActAdd adds h A at the first positions of the prompt. CAA adds
+          its vector at all token positions after the user's prompt.
       - id: toy
         text: >
-          A toy example: h is one, one; v is two, zero; and alpha is one and a half. So h tilde is four,
-          one. Take a three-token vocabulary whose unembedding rows are one, zero for "love"; minus one,
-          zero for "hate"; and zero, one for "the". The logits move from one, minus one, one to four,
-          minus four, one. After softmax, "love" rises from 0.47 to 0.95, and "hate" falls to almost zero.
+          Toy example: h is one, one; v is two, zero; alpha is one and a half; so h tilde is four, one. With
+          unembedding rows one, zero for "love", minus one, zero for "hate", and zero, one for "the", the
+          logits go from one, minus one, one to four, minus four, one, and after softmax "love" rises from
+          {toy_love_before} to {toy_love_after}.
       - id: real
         text: >
-          Now GPT-2 XL with the original settings: "Love" minus "Hate", before layer 6, with coefficient
-          plus five. The next-token probabilities shift, and "{gain1}" gains the most. Below are the
-          first sampled continuations, using the same random choices with and without steering. They
-          are not cherry-picked. The original blog post's examples were chosen as the best of three.
+          Now GPT-2 XL with the original settings: "Love" minus "Hate", before layer 6, coefficient plus
+          five. Next-token probabilities shift; "{gain1}" gains most. <bookmark mark='cont'/>Then the first
+          sampled continuations, same random choices, not cherry-picked; <bookmark mark='note'/>the original
+          blog post's examples were the best of three.
 
   - id: ch09
     title: "9 · Does it really work?"
     beats:
       - id: question
         text: >
-          One example proves little. So, before running anything, we wrote down our hypotheses and
-          exactly how we would test them, and saved that plan publicly. We took {n_prompts} openings of
-          real movie reviews and continued each one under six values of alpha, three times each.
+          One example proves little, so we tested it, writing down our hypotheses and analysis before
+          collecting any data. {design_sentence}
       - id: control
         text: >
-          A control is a comparison condition that keeps everything the same except the thing being
-          tested. Our control adds random directions with exactly the same norm as the steering vector.
-          If any push of that size made text more positive, the control would show it.
+          A control is a comparison condition identical except for the thing being tested. Ours adds random
+          directions with the same norm as the steering vector.
       - id: metric
         text: >
-          A separate sentiment classifier, a model trained to judge how positive a text is, scored every
-          continuation between zero and one.
+          A sentiment classifier, a separate model trained to judge how positive a text is, scored each
+          continuation from zero to one.
       - id: result
         text: >
-          {result_sentence} The error bars are 95 percent confidence intervals, computed with the
-          bootstrap: we resample the prompts ten thousand times and keep the middle 95 percent of the
-          resulting averages. {verdict_sentence}
+          {result_sentence} Error bars are 95 percent confidence intervals from the bootstrap: resample the
+          prompts ten thousand times and keep the middle 95 percent of the averages. {verdict_sentence}
       - id: cost
         text: >
-          Steering has a price. We also measured the negative log-likelihood: how surprised the unsteered
-          model is by each continuation, per token. Higher means less natural text. {cost_sentence}
+          The price: negative log-likelihood, how surprised the unsteered model is by each continuation per
+          token, where higher means less natural text. {cost_sentence}
 
   - id: ch10
     title: "10 · Nuances and relatives"
     beats:
       - id: limits
         text: >
-          Steering has limits. Its strength can't grow forever: the injection coefficient cannot be
-          increased indefinitely. Middle layers tend to work best. It needs access to the model's
-          internals: ActAdd is not immediately applicable given only API access to a model. And it is
-          unreliable on individual inputs: Tan and colleagues found that steerability is highly variable
-          across different inputs, and for some inputs steering even has the opposite effect.
+          Steering has limits. <bookmark mark='coeff'/>The injection coefficient cannot be increased indefinitely.
+          <bookmark mark='middle'/>Middle layers tend to work best. <bookmark mark='api'/>It needs access to the
+          model's internals: ActAdd is not immediately applicable given only API access to a model. <bookmark mark='tan'/>And
+          Tan and colleagues found that steerability is highly variable across different inputs; <bookmark mark='anti'/>for
+          some, steering even has the opposite effect.
       - id: relatives
         text: >
-          Steering has close relatives. Inference-Time Intervention shifts activations along chosen
-          directions inside a few attention heads, the sub-parts of attention. Representation
-          engineering reads and controls such directions. Directional ablation removes a direction
-          instead of adding one: subtract from x its projection, r hat dot x, times r hat, which is the
-          part of x pointing along the unit vector r hat. Arditi and colleagues found that refusal is
-          mediated by a one-dimensional subspace, that is, by a single direction. And Anthropic's Golden
-          Gate Claude fixed one learned feature, a direction tied to the Golden Gate Bridge, at a high value.
+          Close relatives: <bookmark mark='iti'/>Inference-Time Intervention shifts activations along chosen
+          directions inside a few attention heads, the sub-parts of attention. <bookmark mark='repe'/>Representation
+          engineering reads and controls such directions. <bookmark mark='abl'/>Directional ablation removes a
+          direction: subtract from x its projection, <bookmark mark='proj'/>r hat dot x times r hat, the part of x
+          along the unit vector r hat. <bookmark mark='arditi'/>Arditi and colleagues found refusal is mediated by a
+          one-dimensional subspace: a single direction. <bookmark mark='gg'/>And Anthropic's Golden Gate Claude fixed
+          one learned feature, a direction tied to the Golden Gate Bridge, at a high value.
 
   - id: ch11
     title: "11 · Recap"
     beats:
       - id: recap
         text: >
-          Here are the two lines again, and now every symbol has a meaning. The steering vector v sub ell
-          is an element of R d. D is a finite set of triples, and its size is a whole number. Each triple
-          holds a prompt and two completions, and a sub ell gives their activation at layer ell. In the
-          second line, h is the residual stream at layer ell and position t, alpha is a real scalar, and T
-          is the set of positions we edit.
+          The two lines again, and now every symbol has a meaning. The steering vector v sub ell is an element
+          of R d. D is a finite set of triples; its size is a whole number. Each triple holds a prompt and two
+          completions, and a sub ell gives their activation at layer ell. Below, h is the residual stream at
+          layer ell and position t, alpha is a real scalar, and T is the set of positions we edit.
       - id: outro
         text: >
           Build a direction by contrasting examples, then add it while the model runs. That is a steering
-          vector. Every source, number and line of code behind this video is linked in the description.
+          vector. Every source, number and line of code is linked in the description.

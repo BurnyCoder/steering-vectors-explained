@@ -1,0 +1,5 @@
+# Normalise line endings to LF in the repo (Windows checkouts convert on the fly).
+* text=auto eol=lf
+*.png binary
+*.pdf binary
+*.mp3 binary

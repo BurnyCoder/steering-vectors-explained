@@ -28,28 +28,31 @@ sources:
         location: "Appendix C"
       - id: actadd_middle_layers
         text: "intervening at the middle layers is most effective."
-        location: "Section 3, footnote 2"
+        location: "Section 3 (main text)"
+      - id: actadd_layer_choice
+        text: "the Love vector is most effective inserted at layer 6, while the more abstract Conspiracy vector is better inserted later, at layer 23."
+        location: "Appendix C"
       - id: actadd_api_access
         text: "ActAdd is not immediately applicable given only API access to a model."
         location: "Section 5 (Limitations)"
 
   - id: turner2023lw
     short: "Turner et al. 2023, LessWrong"
-    citation: "Turner, A. M., Thiergart, L., Udell, D., Leech, G., Mini, U., MacDiarmid, M. (2023). Steering GPT-2-XL by adding an activation vector. LessWrong / AI Alignment Forum."
+    citation: "Turner, A. M., MacDiarmid, M., Udell, D., Thiergart, L., Mini, U. (2023, May 13). Steering GPT-2-XL by adding an activation vector. LessWrong / AI Alignment Forum."
     url: "https://www.lesswrong.com/posts/5spBue2z2tw4JuDCx/steering-gpt-2-xl-by-adding-an-activation-vector"
     fetch_url: "https://www.greaterwrong.com/posts/5spBue2z2tw4JuDCx/steering-gpt-2-xl-by-adding-an-activation-vector"
     license: "all rights reserved (no license stated)"
     quotes:
       - id: lw_love_hate_setup
-        text: "\"Love\" - \"Hate\" before attention layer 6 with coefficient +5"
-        location: "Section 'Demonstrations'"
+        text: "“Love”—“Hate” before attention layer 6 with coefficient +5"
+        location: "Section 'Demonstrations', example 1"
       - id: lw_cherry_picked
         text: "We slightly (best-of-3) cherry-picked our results in order to make the post shorter."
-        location: "Introduction"
+        location: "Section 'Demonstrations' (the introduction's example was best-of-30, footnote 1)"
 
   - id: actadd_code
     short: "montemac/activation_additions (MIT)"
-    citation: "Turner, A. M., MacDiarmid, M., et al. activation_additions: code for ActAdd (GitHub repository, MIT license)."
+    citation: "MacDiarmid, M., Udell, D., Mini, U., Thiergart, L., et al. (2023). activation_additions: 'Algebraic value editing in pretrained language models', the ActAdd code (GitHub repository, MIT license)."
     url: "https://github.com/montemac/activation_additions"
     fetch_url: "https://raw.githubusercontent.com/montemac/activation_additions/main/README.md"
     license: "MIT"
@@ -74,6 +77,12 @@ sources:
       - id: caa_positions
         text: "these steering vectors are added at all token positions after the user’s prompt"
         location: "Abstract"
+      - id: caa_noise
+        text: "Using hundreds of diverse contrast pairs reduces noise in the steering vector, allowing for a more precise encoding of the behavior of interest."
+        location: "Section 2 (Related work)"
+      - id: caa_answer_letter
+        text: "we compute the difference in the language model's activations at the position of the answer letter between all the positive and negative prompts"
+        location: "Section 3 (Method)"
 
   - id: subramani2022
     short: "Subramani et al. 2022, Findings of ACL"
@@ -91,7 +100,7 @@ sources:
     citation: "Mikolov, T., Yih, W., Zweig, G. (2013). Linguistic Regularities in Continuous Space Word Representations. Proceedings of NAACL-HLT 2013, 746-751."
     url: "https://aclanthology.org/N13-1090/"
     fetch_url: "https://aclanthology.org/N13-1090.pdf"
-    license: "ACL Anthology (pre-2016, no CC license)"
+    license: "CC BY-NC-SA 3.0 (ACL Anthology, pre-2016 papers)"
     quotes:
       - id: mikolov_king_queen
         text: "\"King - Man + Woman\" results in a vector very close to \"Queen.\""
@@ -127,6 +136,12 @@ sources:
       - id: gpt2_vocab
         text: "The vocabulary is expanded to 50,257."
         location: "Section 2.3"
+      - id: gpt2_preln
+        text: "Layer normalization (Ba et al., 2016) was moved to the input of each sub-block"
+        location: "Section 2.3"
+      - id: gpt2_final_ln
+        text: "an additional layer normalization was added after the final self-attention block"
+        location: "Section 2.3"
 
   - id: arditi2024refusal
     short: "Arditi et al. 2024, NeurIPS"
@@ -141,7 +156,7 @@ sources:
 
   - id: tan2024generalization
     short: "Tan et al. 2024, NeurIPS"
-    citation: "Tan, D., Chanin, D., Lynch, A., Kanoulas, D., Paige, B., Garriga-Alonso, A., Kirk, R. (2024). Analyzing the Generalization and Reliability of Steering Vectors. NeurIPS 2024. arXiv:2407.12404."
+    citation: "Tan, D., Chanin, D., Lynch, A., Paige, B., Kanoulas, D., Garriga-Alonso, A., Kirk, R. (2024). Analysing the Generalisation and Reliability of Steering Vectors. NeurIPS 2024. arXiv:2407.12404 (arXiv listing titled 'Analyzing the Generalization ...')."
     url: "https://arxiv.org/abs/2407.12404"
     fetch_url: "https://arxiv.org/html/2407.12404"
     license: "CC BY 4.0"
@@ -155,7 +170,7 @@ sources:
 
   - id: li2023iti
     short: "Li et al. 2023 (ITI), NeurIPS"
-    citation: "Li, K., Patel, O., Viegas, F., Pfister, H., Wattenberg, M. (2023). Inference-Time Intervention: Eliciting Truthful Answers from a Language Model. NeurIPS 2023. arXiv:2306.03341."
+    citation: "Li, K., Patel, O., Viégas, F., Pfister, H., Wattenberg, M. (2023). Inference-Time Intervention: Eliciting Truthful Answers from a Language Model. NeurIPS 2023. arXiv:2306.03341."
     url: "https://arxiv.org/abs/2306.03341"
     fetch_url: "https://arxiv.org/html/2306.03341"
     license: "CC BY 4.0"
@@ -174,6 +189,9 @@ sources:
       - id: repe_definition
         text: "a top-down approach to AI transparency called representation engineering (RepE)"
         location: "Figure 1 caption"
+      - id: repe_reading_control
+        text: "we develop improved baselines for reading and controlling representations"
+        location: "Section 1 (Introduction)"
 
   - id: templeton2024scaling
     short: "Templeton et al. 2024, Transformer Circuits"
@@ -183,7 +201,7 @@ sources:
     quotes:
       - id: templeton_clamp
         text: "\"clamp\" specific features of interest to artificially high or low values during the forward pass"
-        location: "Section 'Feature steering'"
+        location: "Section 'Assessing Feature Interpretability', subsection 'Influence on Behavior'"
 
   - id: anthropic2024goldengate
     short: "Anthropic 2024, Golden Gate Claude"
@@ -204,6 +222,67 @@ sources:
     quotes:
       - id: persona_mean_diff
         text: "computed as the difference in mean activations between responses exhibiting the target trait"
+        location: "Figure 2 caption (Section 2)"
+
+  - id: transformerlens
+    short: "TransformerLens (Nanda & Bloom 2022)"
+    citation: "Nanda, N., Bloom, J. (2022). TransformerLens. GitHub repository (MIT license); quoted from transformer_lens/HookedTransformer.py at tag v2.15.4."
+    url: "https://github.com/TransformerLensOrg/TransformerLens"
+    fetch_url: "https://raw.githubusercontent.com/TransformerLensOrg/TransformerLens/v2.15.4/transformer_lens/HookedTransformer.py"
+    license: "MIT"
+    quotes:
+      - id: tl_prepend_default
+        text: "which is set to True unless specified otherwise"
+        location: "HookedTransformer.to_str_tokens docstring (default_prepend_bos)"
+      - id: tl_gpt2_no_bos
+        text: "some models eg GPT-2 were not trained with a BOS token"
+        location: "HookedTransformer.to_str_tokens docstring"
+
+  - id: hf_gpt2_tokenizer
+    short: "HF Transformers (Wolf et al. 2020), tokenization_gpt2.py"
+    citation: "Wolf, T., Debut, L., Sanh, V., et al. (2020). Transformers: State-of-the-Art Natural Language Processing. Proceedings of EMNLP 2020: System Demonstrations, 38-45. Quoted from src/transformers/models/gpt2/tokenization_gpt2.py at tag v5.20.1 (Apache-2.0)."
+    url: "https://github.com/huggingface/transformers/blob/v5.20.1/src/transformers/models/gpt2/tokenization_gpt2.py"
+    fetch_url: "https://raw.githubusercontent.com/huggingface/transformers/v5.20.1/src/transformers/models/gpt2/tokenization_gpt2.py"
+    license: "Apache-2.0"
+    quotes:
+      - id: hf_no_bos
+        text: "add_bos_token (`bool`, *optional*, defaults to `False`)"
+        location: "GPT2Tokenizer docstring"
+
+  - id: hf_gpt2_model
+    short: "HF Transformers (Wolf et al. 2020), modeling_gpt2.py"
+    citation: "Wolf, T., Debut, L., Sanh, V., et al. (2020). Transformers: State-of-the-Art Natural Language Processing. Proceedings of EMNLP 2020: System Demonstrations, 38-45. Quoted from src/transformers/models/gpt2/modeling_gpt2.py at tag v5.20.1 (Apache-2.0)."
+    url: "https://github.com/huggingface/transformers/blob/v5.20.1/src/transformers/models/gpt2/modeling_gpt2.py"
+    fetch_url: "https://raw.githubusercontent.com/huggingface/transformers/v5.20.1/src/transformers/models/gpt2/modeling_gpt2.py"
+    license: "Apache-2.0"
+    quotes:
+      - id: hf_learned_positions
+        text: "self.wpe = nn.Embedding(config.max_position_embeddings, self.embed_dim)"
+        location: "GPT2Model.__init__ (learned position embeddings)"
+      - id: hf_final_ln
+        text: "hidden_states = self.ln_f(hidden_states)"
+        location: "GPT2Model.forward (final LayerNorm before the LM head)"
+
+  - id: nissim2020analogies
+    short: "Nissim et al. 2020, Computational Linguistics"
+    citation: "Nissim, M., van Noord, R., van der Goot, R. (2020). Fair Is Better than Sensational: Man Is to Doctor as Woman Is to Doctor. Computational Linguistics 46(2), 487-497. doi:10.1162/coli_a_00379."
+    url: "https://aclanthology.org/2020.cl-2.7/"
+    fetch_url: "https://aclanthology.org/2020.cl-2.7.pdf"
+    license: "CC BY 4.0"
+    quotes:
+      - id: nissim_ignore_inputs
+        text: "in practice most implementations of these optimization functions specifically ignore one or more input vectors"
+        location: "Section 3"
+
+  - id: engels2024multidim
+    short: "Engels et al. 2024, ICLR 2025"
+    citation: "Engels, J., Michaud, E. J., Liao, I., Gurnee, W., Tegmark, M. (2024). Not All Language Model Features Are One-Dimensionally Linear. ICLR 2025. arXiv:2405.14860."
+    url: "https://arxiv.org/abs/2405.14860"
+    fetch_url: "https://arxiv.org/html/2405.14860v3"
+    license: "CC BY 4.0"
+    quotes:
+      - id: engels_circular
+        text: "circular features representing days of the week and months of the year"
         location: "Abstract"
 
   # ---- cited without on-screen quotes (methods, data, software) ----
@@ -219,8 +298,8 @@ sources:
     license: "citation only"
   - id: hartmann2023siebert
     short: "Hartmann et al. 2023 (SiEBERT)"
-    citation: "Hartmann, J., Heitmann, M., Siebert, C., Schamp, C. (2023). More than a Feeling: Accuracy and Application of Sentiment Analysis. International Journal of Research in Marketing 40(1), 75-87."
-    url: "https://huggingface.co/siebert/sentiment-roberta-large-english"
+    citation: "Hartmann, J., Heitmann, M., Siebert, C., Schamp, C. (2023). More than a Feeling: Accuracy and Application of Sentiment Analysis. International Journal of Research in Marketing 40(1), 75-87. Model: https://huggingface.co/siebert/sentiment-roberta-large-english"
+    url: "https://doi.org/10.1016/j.ijresmar.2022.05.005"
     license: "citation only"
   - id: holm1979
     short: "Holm 1979"
@@ -239,6 +318,6 @@ sources:
     license: "citation only"
   - id: efron1993bootstrap
     short: "Efron & Tibshirani 1993"
-    citation: "Efron, B., Tibshirani, R. J. (1993). An Introduction to the Bootstrap. Chapman & Hall/CRC."
+    citation: "Efron, B., Tibshirani, R. J. (1993). An Introduction to the Bootstrap. Chapman & Hall (the Taylor & Francis DOI record lists 1994)."
     url: "https://doi.org/10.1201/9780429246593"
     license: "citation only"

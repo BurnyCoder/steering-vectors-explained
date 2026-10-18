@@ -7,7 +7,9 @@ Position safety: the hook reads the absolute `position_ids` that GPT2Model passe
 (transformers/models/gpt2/modeling_gpt2.py), so with a KV cache the later one-token steps
 (positions ≥ n) are correctly left alone — tests/test_steering.py::test_kv_cache_matches_no_cache.
 `sample` mirrors TransformerLens' sampler used by ActAdd: logits/temperature, minus
-freq_penalty·(token counts so far), then nucleus (top-p) filtering, then a multinomial draw.
+freq_penalty·(token counts so far), then nucleus (top-p) filtering, then a multinomial draw
+(order verified in transformer_lens/utils.py::sample_logits, v2.15.4:
+https://github.com/TransformerLensOrg/TransformerLens/blob/v2.15.4/transformer_lens/utils.py).
 """
 
 from contextlib import contextmanager

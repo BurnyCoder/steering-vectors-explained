@@ -55,7 +55,7 @@ class Ch07(ChapterScene):
         with self.say("formula"):
             eq = v_equation(56).shift(UP * 0.9)
             steps = [((4, 5, 6, 7, 8), "1. difference for one triple"), ((3,), "2. add over every triple in D"),
-                     ((2,), "3. divide by |D|, the number of triples"), ((0,), "= the steering vector, an element of ℝ^d")]
+                     ((2,), "3. divide by |D|, the number of triples"), ((0,), "= the steering vector, an element of ℝᵈ")]
             for k, (idx, label) in enumerate(steps):  # build right-to-left: bracket, Σ, 1/|D|, v_ℓ =
                 part = VGroup(*[eq[i] for i in idx])
                 self.play(Write(part) if k < 3 else Write(VGroup(eq[0], eq[1])))
@@ -90,6 +90,8 @@ class Ch07(ChapterScene):
                 MathTex(rf"h_A^{{(1)}} = \big({vals},\ \dots\big),\qquad \|h_A^{{(1)}}\| = {ex['h_A_norm_per_pos'][1]:.1f}", font_size=36, color=T.STEER),
                 MathTex(rf"h_A^{{(0)}} = 0 \quad(\text{{both start with }} \langle|\text{{endoftext}}|\rangle)", font_size=36, color=T.FG2),
             ).arrange(DOWN, buff=0.45)
+            if lines.width > 13:
+                lines.scale_to_fit_width(13)  # keep the long coordinate line inside the frame
             for ln in lines:
                 self.play(Write(ln), run_time=1.2)
         self.wait(0.5)

@@ -80,7 +80,15 @@ class Ch09(ChapterScene):
                         + r",\ \text{run 2 } " + _ci(h1_2["mean"], h1_2["lo"], h1_2["hi"]), font_size=30, color=T.FG),
             ).arrange(DOWN, buff=0.15).next_to(fig, DOWN, buff=0.2)
             self.play(Create(box)); self.play(Write(res))
-        self.play(FadeOut(box), FadeOut(res))
+            self.wait_until_bookmark("ph")
+            r = study("exp02_posthoc")["rates"]
+            ph = text(f"post-hoc (unplanned): “hate” appears in {r['steer_-5']['hate'][0]:.0%} of α = −5 continuations "
+                      f"(α = 0: {r['steer_0']['hate'][0]:.1%}); “lov…” in {r['steer_5']['love'][0]:.0%} at α = +5 "
+                      f"(α = 0: {r['steer_0']['love'][0]:.0%})", T.SIZE_SMALL - 4, T.FG2, width=95).next_to(res, DOWN, buff=0.15)
+            if ph.width > 13:
+                ph.scale_to_fit_width(13)  # never wider than the frame
+            self.play(FadeIn(ph))
+        self.play(FadeOut(box), FadeOut(res), FadeOut(ph))
 
         with self.say("cost"):
             box2 = Rectangle(width=5.6, height=4.4, color=T.ALPHA).move_to(fig.get_center() + RIGHT * 2.85)

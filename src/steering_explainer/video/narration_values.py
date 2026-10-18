@@ -65,10 +65,23 @@ def _toy_values() -> dict:
             "toy_love_before": f"{st['p_before'][0]:.2f}", "toy_love_after": f"{st['p_after'][0]:.2f}"}
 
 
-def compute(ex: dict, st1: dict, st2: dict | None = None) -> dict:
+def _pct(x: float) -> str:
+    return "under 1 percent" if x < 0.01 else f"{x * 100:.0f} percent"
+
+
+def _posthoc_values(ph: dict) -> dict:
+    """Exploratory (not pre-registered) lexical finding from study/posthoc.py, announced as unplanned."""
+    r = ph["rates"]
+    return {"posthoc_sentence": (f"A check we did not plan in advance hints at why: at minus five, {_pct(r['steer_-5']['hate'][0])} of "
+                                 f"continuations contain the word hate itself, versus {_pct(r['steer_0']['hate'][0])} without "
+                                 f"steering, and at plus five, {_pct(r['steer_5']['love'][0])} contain love.")}
+
+
+def compute(ex: dict, st1: dict, st2: dict | None = None, ph: dict | None = None) -> dict:
     v = _toy_values() | (_example_values(ex) if ex else {})
     if st1 and st2:
         v.update(_study_values(st1, st2))
     else:
         v.update(design_sentence="", result_sentence=PENDING, verdict_sentence="", cost_sentence="")
+    v.update(_posthoc_values(ph) if ph else {"posthoc_sentence": ""})
     return v

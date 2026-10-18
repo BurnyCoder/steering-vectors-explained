@@ -59,7 +59,7 @@ def study(name: str = "summary") -> dict:
 def narration_values() -> dict:
     """Placeholder values for script.yaml, computed from the JSON results (see docs/storyboard.md)."""
     from steering_explainer.video.narration_values import compute  # kept separate: pure data -> strings
-    return compute(example(), study(), study("exp02_summary"))
+    return compute(example(), study(), study("exp02_summary"), study("exp02_posthoc"))
 
 
 class ChapterScene(VoiceoverScene):

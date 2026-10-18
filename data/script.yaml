@@ -238,7 +238,7 @@ chapters:
       - id: result
         text: >
           {result_sentence} Error bars are 95 percent confidence intervals from the bootstrap: resample the
-          prompts ten thousand times and keep the middle 95 percent of the averages. {verdict_sentence}
+          prompts ten thousand times and keep the middle 95 percent of the averages. {verdict_sentence} <bookmark mark='ph'/>{posthoc_sentence}
       - id: cost
         text: >
           The price: negative log-likelihood, how surprised the unsteered model is by each continuation per

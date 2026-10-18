@@ -129,9 +129,11 @@ def assemble(s: Settings) -> Path:
 
     reg = registry()
     desc = ["# Steering vectors, from scratch — video description", "",
-            "Narrated explainer of LLM steering vectors (activation addition), every term defined from scratch,",
-            "grounded in a real, pre-registered GPT-2-XL experiment. Author: Libor Burian (independent researcher).",
-            "Code, data and logs: https://github.com/BurnyCoder/steering-vectors-explained", "", "## Chapters", ""]
+            "Narrated explainer of LLM steering vectors (activation addition), every symbol defined from scratch,",
+            "grounded in real GPT-2-XL runs, including two pre-registered experiments. Author: Libor Burian (independent researcher).",
+            "Code and data: https://github.com/BurnyCoder/steering-vectors-explained",
+            "Fact-check log (every claim, its source, and what changed since v1.0): "
+            "https://github.com/BurnyCoder/steering-vectors-explained/blob/master/docs/fact_check.md", "", "## Chapters", ""]
     desc += [f"{_stamp(a)} {ti}" for a, ti in zip(starts, titles)]
     desc += ["", f"Total length: {_stamp(t)}", "", "## Sources", ""]
     desc += [f"- {src.citation} {src.url}" for src in reg.values()]

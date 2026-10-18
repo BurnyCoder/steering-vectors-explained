@@ -46,9 +46,9 @@ class Ch07(ChapterScene):
                           text("c⁺:  (B)   ← factual", T.SIZE_SMALL, T.PLUS), text("c⁻:  (A)   ← hallucinated", T.SIZE_SMALL, T.MINUS)
                           ).arrange(DOWN, aligned_edge=LEFT, buff=0.2).shift(UP * 0.5)
             ill = text("illustrative triple in CAA's A/B format", T.SIZE_SMALL - 6, T.MUTED).next_to(trip, DOWN, buff=0.12).align_to(trip, LEFT)
-            a = MathTex(r"a_\ell(p,c)\in\mathbb{R}^d:\ \text{residual stream at layer }\ell\text{, last token of } c", font_size=36)
+            a = MathTex(r"a_\ell(p,c)\in\mathbb{R}^d:\ \text{residual stream at layer }\ell\text{, at the answer letter of } c", font_size=36)
             a.next_to(ill, DOWN, buff=0.35).set_x(0)
-            q = quote_card("caa_definition", width=80, size=20).to_edge(DOWN, buff=0.55)
+            q = quote_card("caa_noise", width=80, size=20).to_edge(DOWN, buff=0.8)  # why average many pairs (CAA §2)
             self.play(Write(D)); self.play(FadeIn(trip), FadeIn(ill)); self.play(Write(a)); self.play(FadeIn(q))
         self.clear_stage(); self.add(head)
 
@@ -58,14 +58,20 @@ class Ch07(ChapterScene):
                      ((2,), "3. divide by |D|, the number of triples"), ((0,), "= the steering vector, an element of ℝᵈ")]
             for k, (idx, label) in enumerate(steps):  # build right-to-left: bracket, Σ, 1/|D|, v_ℓ =
                 part = VGroup(*[eq[i] for i in idx])
-                self.play(Write(part) if k < 3 else Write(VGroup(eq[0], eq[1])))
+                self.play(Write(part) if k < 3 else Write(VGroup(eq[0], eq[1])), run_time=0.7)
                 b = Brace(part, DOWN, color=T.FG2)
                 t = text(label, T.SIZE_BODY, T.FG2).next_to(eq, DOWN, buff=0.9).set_x(0)  # centred: never off-frame
-                self.play(FadeIn(b), FadeIn(t))
-                self.wait(0.4)
-                self.play(FadeOut(b), FadeOut(t))
-            special = MathTex(r"\text{ActAdd} = \text{special case } |\mathcal{D}| = 1", font_size=40, color=T.FG2).shift(DOWN * 1.8)
+                self.play(FadeIn(b), FadeIn(t), run_time=0.5)
+                self.wait(0.3)
+                self.play(FadeOut(b), FadeOut(t), run_time=0.4)
+            # ActAdd is only *like* |D| = 1: no completions, and one difference per position (h_A ∈ ℝ^{n×d})
+            special = VGroup(MathTex(r"\text{ActAdd} \approx \text{the case } |\mathcal{D}| = 1", font_size=40, color=T.FG2),
+                             text("but no completions, and one difference per position", T.SIZE_SMALL, T.FG2)
+                             ).arrange(DOWN, buff=0.2).shift(DOWN * 1.8)
+            self.wait_until_bookmark("actadd")
+            self.cite("panickssery2024caa", "turner2024actadd")
             self.play(FadeIn(special))
+        self.wait(1.0)  # keep the ActAdd caveat readable after it is spoken
         self.clear_stage(); self.add(head)
 
         with self.say("toy"):
@@ -82,11 +88,14 @@ class Ch07(ChapterScene):
         self.clear_stage(); self.add(head)
 
         with self.say("real"):
-            self.cite("turner2024actadd", extra="our measurement, GPT-2-XL layer 6")
+            lay, tp, tm = ex["layer"], ex["tokens_plus"][1], ex["tokens_minus"][1]  # position 1: "Love" vs "H" (first token of "Hate")
+            self.cite("turner2024actadd", extra=f"our measurement, GPT-2-XL layer {lay}, position 1")
             vals = ",\\ ".join(f"{x:.2f}" for x in ex["h_A_first6"])
             lines = VGroup(
-                MathTex(rf"\|h_6(\text{{Love}})\| = {ex['h_plus_norm']:.1f},\qquad \|h_6(\text{{Hate}})\| = {ex['h_minus_norm']:.1f}", font_size=38),
-                MathTex(rf"\cos = \hat h_6(\text{{Love}})\cdot \hat h_6(\text{{Hate}}) = {ex['cos_plus_minus']:.3f}", font_size=38),
+                MathTex(rf"\|h_{{{lay}}}^{{(1)}}(\text{{{tp}}})\| = {ex['h_plus_norm']:.1f},\qquad "
+                        rf"\|h_{{{lay}}}^{{(1)}}(\text{{{tm}}})\| = {ex['h_minus_norm']:.1f}", font_size=38),
+                MathTex(rf"\cos = \hat h_{{{lay}}}^{{(1)}}(\text{{{tp}}})\cdot \hat h_{{{lay}}}^{{(1)}}(\text{{{tm}}}) = {ex['cos_plus_minus']:.3f}",
+                        font_size=38),
                 MathTex(rf"h_A^{{(1)}} = \big({vals},\ \dots\big),\qquad \|h_A^{{(1)}}\| = {ex['h_A_norm_per_pos'][1]:.1f}", font_size=36, color=T.STEER),
                 MathTex(rf"h_A^{{(0)}} = 0 \quad(\text{{both start with }} \langle|\text{{endoftext}}|\rangle)", font_size=36, color=T.FG2),
             ).arrange(DOWN, buff=0.45)

@@ -1,7 +1,8 @@
 """ch01_vectors.py — scalars, ℝ, ∈, vectors, components, dimension d, ℝ^d; GPT-2-XL's d = 1600.
 
 Global context: the first building blocks; every later chapter writes activations as vectors in ℝ^d.
-Practical numbers (d, parameter count) come from the loaded model config via practical_example.json.
+Practical numbers come from practical_example.json: d from the loaded model config, the parameter count summed
+over its weight tensors (steering/example.py), which differs from the "1542M" in the GPT-2 paper's Table 2.
 """
 
 from manim import DOWN, LEFT, RIGHT, UP, Arrow, Brace, Create, FadeIn, FadeOut, GrowArrow, MathTex, VGroup, Write
@@ -50,15 +51,16 @@ class Ch01(ChapterScene):
         self.play(*[FadeOut(m) for m in (pl, v, tex, l1, l2, p1, p2, dim, gen)])
 
         with self.say("practical"):
-            self.cite("radford2019gpt2", extra="numbers read from the loaded gpt2-xl config")
+            self.cite("radford2019gpt2", extra="d from the loaded gpt2-xl config; parameter count = sum over its weight tensors")
             m = ex["model"]
             vals = ",\\ ".join(f"{x:.2f}" for x in ex["h_plus_first6"])
             long = MathTex(r"\big(" + vals + r",\ \dots\ \big)", color=T.VEC, font_size=44).shift(UP * 0.6)
+            what = text(f"e.g. the vector for “{ex['prompt_plus']}” entering layer {ex['layer']}", T.SIZE_SMALL, T.FG2).next_to(long, UP, buff=0.35)
             br = Brace(long, DOWN, color=T.FG2)
             lab = MathTex(rf"d = {m['d_model']}\ \text{{components}}", font_size=40, color=T.FG).next_to(br, DOWN)
             params = text(f"GPT-2-XL: about {m['n_params'] / 1e9:.2f} billion parameters (weights), learned in training",
                           T.SIZE_SMALL, T.FG2).shift(DOWN * 2.2)
-            self.play(Write(long), run_time=1.5)
+            self.play(Write(long), FadeIn(what), run_time=1.5)
             self.play(FadeIn(br), FadeIn(lab))
             self.play(FadeIn(params))
         self.wait(0.5)

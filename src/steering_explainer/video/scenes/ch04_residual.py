@@ -1,8 +1,8 @@
 """ch04_residual.py — layers ℓ, L, attention, MLP, the residual stream, activations h_ℓ^(t), forward pass.
 
 Global context: steering edits exactly this object — the residual stream entering layer ℓ. The
-update rule is GPT-2's pre-LayerNorm block with the normalisation omitted (as in Arditi et al. 2024,
-Eq. 1); the Elhage et al. (2021) quote is verified verbatim in data/sources.yaml. The real norm of
+update rule is GPT-2's pre-LayerNorm block (Radford et al. 2019 §2.3): Attn_ℓ and MLP_ℓ normalise their own
+input, so the residual sum itself is exact (notation as in Arditi et al. 2024, Eq. 1); the Elhage et al. (2021) quote is verified verbatim in data/sources.yaml. The real norm of
 h_6 at the token " hate" comes from practical_example.json.
 """
 
@@ -29,6 +29,7 @@ class Ch04(ChapterScene):
         self.play(Write(head))
 
         with self.say("layers"):
+            self.cite("radford2019gpt2", "vaswani2017")
             names = ["0", "1", r"\cdots", str(L - 1)]
             stack = VGroup(*[_box(rf"\text{{layer }}{n}" if n != r"\cdots" else n, T.FG2, 2.6, 0.7) for n in names])
             stack.arrange(RIGHT, buff=0.35).shift(UP * 0.6)
@@ -40,15 +41,16 @@ class Ch04(ChapterScene):
         with self.say("parts"):
             attn = _box(r"\mathrm{Attn}_\ell", T.PLUS, 2.0).shift(LEFT * 2.5 + UP * 0.8)
             mlp = _box(r"\mathrm{MLP}_\ell", T.STEER, 2.0).shift(RIGHT * 2.5 + UP * 0.8)
-            da = text("attention: each position gathers information from earlier positions", T.SIZE_SMALL, T.FG2, 30).next_to(attn, DOWN)
+            da = text("attention: each position gathers information from itself and earlier positions", T.SIZE_SMALL, T.FG2, 30).next_to(attn, DOWN)
             dm = text("MLP (multilayer perceptron): transforms each position's vector on its own", T.SIZE_SMALL, T.FG2, 30).next_to(mlp, DOWN)
-            self.play(FadeIn(attn), FadeIn(da))
+            causal = quote_card("vaswani_causal", width=70, size=22).to_edge(DOWN, buff=0.95)  # "itself and earlier"
+            self.play(FadeIn(attn), FadeIn(da), FadeIn(causal))
             self.play(FadeIn(mlp), FadeIn(dm))
-        self.play(FadeOut(VGroup(da, dm)))
+        self.play(FadeOut(VGroup(da, dm, causal)))
 
         with self.say("residual"):
-            self.cite("elhage2021framework", "arditi2024refusal")
-            stream = Line(LEFT * 6, RIGHT * 6, color=T.VEC, stroke_width=6).shift(DOWN * 0.6)
+            self.cite("elhage2021framework", "radford2019gpt2", "arditi2024refusal")
+            stream = Line(LEFT * 6, RIGHT * 6, color=T.VEC, stroke_width=6).shift(DOWN * 0.25)
             p1, p2 = Circle(0.22, color=T.FG).move_to(stream.point_from_proportion(0.38)), Circle(0.22, color=T.FG).move_to(stream.point_from_proportion(0.7))
             plus = VGroup(*[MathTex("+", font_size=36).move_to(c) for c in (p1, p2)])
             self.play(attn.animate.move_to(p1.get_center() + UP * 1.4), mlp.animate.move_to(p2.get_center() + UP * 1.4))
@@ -59,11 +61,13 @@ class Ch04(ChapterScene):
             hl = MathTex(r"h_\ell", color=T.VEC, font_size=38).next_to(stream, LEFT, buff=0.1).shift(RIGHT * 0.6 + DOWN * 0.4)
             hr = MathTex(r"h_{\ell+1}", color=T.VEC, font_size=38).next_to(stream, RIGHT, buff=0.1).shift(LEFT * 0.8 + DOWN * 0.4)
             eq = MathTex(r"h_{\ell+1}=h_\ell+\mathrm{Attn}_\ell(h_\ell)+\mathrm{MLP}_\ell\big(h_\ell+\mathrm{Attn}_\ell(h_\ell)\big)",
-                         font_size=38).shift(DOWN * 1.7)
+                         font_size=38).shift(DOWN * 1.3)
             self.play(Create(stream), FadeIn(hl), FadeIn(hr))
             self.play(FadeIn(VGroup(p1, p2, plus)), *[GrowArrow(a) for a in reads])
-            self.play(Write(eq))
-            q = quote_card("elhage_residual_sum", width=70, size=22).to_edge(DOWN, buff=0.55)
+            ln = text("each part normalizes what it reads (pre-LayerNorm); what it writes is added unchanged",
+                      T.SIZE_SMALL, T.FG2).next_to(head, DOWN, buff=0.35)
+            self.play(Write(eq), FadeIn(ln))
+            q = quote_card("elhage_residual_sum", width=95, size=20).next_to(eq, DOWN, buff=0.25)  # clear of the footer
             self.play(FadeIn(q))
         self.clear_stage()
         self.add(head)
@@ -93,8 +97,9 @@ class Ch04(ChapterScene):
             legend = VGroup(text("ℓ = which layer it enters", T.SIZE_SMALL, T.FG2), text("t = which position (token)", T.SIZE_SMALL, T.FG2)
                             ).arrange(DOWN, aligned_edge=LEFT).next_to(notation, DOWN, buff=0.3)
             hate_pos = ex["tokens_prompt"].index(" hate")
-            real = MathTex(rf"\text{{GPT-2-XL: }}\ h_{{6}}^{{({hate_pos})}}\ (\text{{token ``hate''}})\in\mathbb{{R}}^{{{ex['model']['d_model']}}},\quad "
-                           rf"\|h_6^{{({hate_pos})}}\| = {ex['h_prompt_norm_per_pos'][hate_pos]:.1f}", font_size=36).shift(DOWN * 1.4)
+            lay = ex["layer"]  # the steered layer (practical_example.json), not a typed number
+            real = MathTex(rf"\text{{GPT-2-XL: }}\ h_{{{lay}}}^{{({hate_pos})}}\ (\text{{token ``hate''}})\in\mathbb{{R}}^{{{ex['model']['d_model']}}},\quad "
+                           rf"\|h_{{{lay}}}^{{({hate_pos})}}\| = {ex['h_prompt_norm_per_pos'][hate_pos]:.1f}", font_size=36).shift(DOWN * 1.4)
             fp = text("forward pass = one run through all L layers", T.SIZE_SMALL, T.FG).shift(DOWN * 2.4)
             self.play(Write(notation)); self.play(FadeIn(legend))
             self.play(Write(real)); self.play(FadeIn(fp))

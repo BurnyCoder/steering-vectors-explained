@@ -34,7 +34,8 @@ class Ch00(ChapterScene):
 
         with self.say("steered"):
             self.cite("turner2023lw", extra=f"our run: GPT-2-XL, layer {ex['layer']}, coefficient +{ex['coeff']:g}, seed 0")
-            tag1 = text("same model, same random choices, + one list of numbers added inside:", T.SIZE_SMALL, T.PLUS)
+            # same seed, not the same random draws: steered/unsteered are separate rows of one sampled batch
+            tag1 = text("same model, same seed, + fixed lists of numbers added at the first positions:", T.SIZE_SMALL, T.PLUS)
             tag1.next_to(out0, DOWN, buff=0.5).align_to(tag0, LEFT)
             out1 = text("…" + _clean(c0["steered"]), T.SIZE_SMALL, T.FG, width=70).next_to(tag1, DOWN, aligned_edge=LEFT)
             self.play(FadeIn(tag1))
@@ -45,12 +46,14 @@ class Ch00(ChapterScene):
                            color=T.STEER, font_size=48).shift(DOWN * 0.6)
             brace = Brace(nums, UP, color=T.FG2)
             lab = text("a list of numbers = a vector  →  here: a steering vector", T.SIZE_BODY, T.STEER).next_to(brace, UP, buff=0.15)
+            which = text(f"first 6 of {ex['model']['d_model']:,} numbers in the list added at position 1 (times {ex['coeff']:g})",
+                         T.SIZE_SMALL, T.FG2).next_to(nums, DOWN, buff=0.3)
             self.play(FadeOut(VGroup(tag0, tag1, out0, out1)))
-            self.play(Write(nums), FadeIn(brace), FadeIn(lab))
+            self.play(Write(nums), FadeIn(brace), FadeIn(lab), FadeIn(which))
 
         with self.say("objects"):
             self.uncite()
-            self.play(*[FadeOut(m) for m in (prompt, nums, brace, lab)])
+            self.play(*[FadeOut(m) for m in (prompt, nums, brace, lab, which)])
             eqs = full_objects(50).move_to(DOWN * 0.2)
             self.play(Write(eqs[0]), run_time=2.5)
             self.play(Write(eqs[1]), run_time=2)

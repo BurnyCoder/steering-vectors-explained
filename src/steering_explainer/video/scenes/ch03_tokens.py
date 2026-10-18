@@ -46,18 +46,22 @@ class Ch03(ChapterScene):
         self.play(FadeOut(VGroup(flow, v, q)))
 
         with self.say("example"):
-            row = token_row(ex["tokens_prompt"], T.FG, 34, buff=0.45).shift(UP * 0.4)
+            # <|endoftext|> comes from TransformerLens' prepend_bos default (as in ActAdd), not from GPT-2's tokenizer
+            self.cite("transformerlens", "hf_gpt2_tokenizer")
+            row = token_row(ex["tokens_prompt"], T.FG, 34, buff=0.45).shift(UP * 0.9)
             ids = VGroup(*[text(str(i), T.SIZE_SMALL, T.FG2).next_to(c, DOWN, buff=0.2) for i, c in zip(ex["token_ids_prompt"], row)])
             pos = VGroup(*[MathTex(f"t={k}", font_size=34, color=T.ALPHA).next_to(c, UP, buff=0.25) for k, c in enumerate(row)])
-            cap = text("token IDs", T.SIZE_SMALL, T.FG2).next_to(ids, DOWN, buff=0.3)
+            cap = text("token IDs   (· marks a space)", T.SIZE_SMALL, T.FG2).next_to(ids, DOWN, buff=0.3)
+            q = quote_card("tl_gpt2_no_bos", width=70, size=22).next_to(cap, DOWN, buff=0.7)
             self.play(FadeIn(row, lag_ratio=0.2))
             self.play(FadeIn(ids), FadeIn(cap))
-            self.play(FadeIn(pos, lag_ratio=0.2))
-        self.play(FadeOut(VGroup(row, ids, pos, cap)))
+            self.play(FadeIn(pos, lag_ratio=0.2), FadeIn(q))
+        self.play(FadeOut(VGroup(row, ids, pos, cap, q)))
 
         with self.say("embedding"):
-            sig = MathTex(r"\mathrm{Embed}: V \to \mathbb{R}^d,\qquad h_0^{(t)} = e(\text{token}_t) + e(\text{position } t)",
-                          font_size=42).shift(UP * 1.9)
+            self.cite("hf_gpt2_model")  # learned token (wte) and position (wpe) embeddings in GPT2Model
+            sig = MathTex(r"\mathrm{Embed}: V\times\{0,1,\dots\} \to \mathbb{R}^d,\qquad "
+                          r"h_0^{(t)} = e_{\text{tok}}(\text{token}_t) + e_{\text{pos}}(t)", font_size=40).shift(UP * 1.9)
             chips = token_row(list(toy.TOY_EMBED), T.FG, 32).arrange(DOWN, buff=0.35).shift(LEFT * 2 + DOWN * 0.6)
             vecs = VGroup(*[MathTex(tup(v), color=T.VEC, font_size=44).move_to([1.6, c.get_center()[1], 0], aligned_edge=LEFT)
                             for c, v in zip(chips, toy.TOY_EMBED.values())])

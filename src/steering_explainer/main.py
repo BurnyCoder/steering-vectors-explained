@@ -5,12 +5,14 @@ Global context (data flow):
   practical_example GPT-2-XL + "Love"−"Hate" -> data/practical_example.json (numbers for the video)
   preregister       settings -> reports/exp01_preregistration.md (written BEFORE any study data)
   pilot             20 pilot prompts -> effect size -> power analysis -> data/study/power.json
-  study             N fresh prompts × conditions × seeds -> data/study/completions.jsonl (+ scores)
+  study             N fresh prompts × conditions × seeds -> data/study/main.jsonl (completions + scores)
   analyze           bootstrap CIs, Wilcoxon+Holm, Spearman -> data/study/summary.json + figures
   preregister2      exp01 effect size -> powered N -> reports/exp02_preregistration.md (committed before data)
   replicate         N fresh prompts, primary steer(5) - steer(0) -> data/study/exp02*.json(l) + figures
   render            Manim chapters (edge-tts narration) -> media/videos/... (--chapters ch03 --quality l)
+  inspect           one contact sheet of frames per chapter -> outputs/check/ (visual QA)
   assemble          ffmpeg concat + chapters + merged subtitles -> outputs/
+  docs              data/glossary.yaml + data/sources.yaml -> docs/glossary.md, docs/sources.md
   paper             reports/paper/paper.md -> reports/paper/paper.pdf (pandoc + xelatex)
 Usage: `uv run steering-explainer` (all phases) or `uv run steering-explainer --phases study analyze`.
 """
@@ -157,6 +159,17 @@ def assemble(ctx: Context) -> None:
     run_assemble(ctx.s)
 
 
+def docs(ctx: Context) -> None:
+    from steering_explainer.docs_gen import write_docs
+    write_docs(ctx.s)
+    log.info("Wrote docs/glossary.md and docs/sources.md")
+
+
+def paper(ctx: Context) -> None:
+    from steering_explainer.report import build_paper
+    build_paper(ctx.s)
+
+
 def inspect(ctx: Context) -> None:
     from steering_explainer.video.render import contact_sheets
     log.info("Contact sheets: %s", contact_sheets(ctx.s))
@@ -164,14 +177,14 @@ def inspect(ctx: Context) -> None:
 
 PHASES = {"verify_sources": verify_sources, "practical_example": practical_example, "preregister": preregister,
           "pilot": pilot, "study": study, "analyze": analyze, "preregister2": preregister2, "replicate": replicate,
-          "render": render, "inspect": inspect, "assemble": assemble}
+          "render": render, "inspect": inspect, "assemble": assemble, "docs": docs, "paper": paper}
 
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--phases", nargs="+", choices=list(PHASES), default=list(PHASES), help="phases to run, in order")
     parser.add_argument("--chapters", nargs="*", default=None, help="render only these chapter ids, e.g. ch03 ch07")
-    parser.add_argument("--quality", choices=["l", "m", "h", "k"], default=None, help="override RENDER_QUALITY")
+    parser.add_argument("--quality", choices=["l", "m", "f", "h", "k"], default=None, help="override RENDER_QUALITY (f = 1080p30)")
     args = parser.parse_args(argv)
     if args.quality:
         os.environ["RENDER_QUALITY"] = args.quality  # load_settings never overrides an already-set variable

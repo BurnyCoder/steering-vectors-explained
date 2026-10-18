@@ -19,6 +19,8 @@ dependencies = [
     "manim>=0.22.0",
     "manim-voiceover>=0.4.0",
     "matplotlib>=3.11.2",
+    # Manim 0.22 ImageMobject calls Image.fromarray(..., mode="RGBA"); Pillow 13 removed `mode` (2026-10-15).
+    "pillow<12",
     "pypdf>=6.21.1",
     "python-dotenv>=1.2.4",
     "pyyaml>=6.0.3",

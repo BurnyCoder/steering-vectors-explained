@@ -1,0 +1,240 @@
+{
+  "n_prompts": 30,
+  "n_completions": 1440,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "means": {
+    "p_pos": {
+      "random_5": [
+        0.6851435155555554,
+        0.6037984393888889,
+        0.7627131467222222
+      ],
+      "random_15": [
+        0.6202241444444445,
+        0.5606719477777777,
+        0.6775667347777777
+      ],
+      "steer_-5": [
+        0.7294029666666667,
+        0.6351748097222224,
+        0.818795075
+      ],
+      "steer_0": [
+        0.7542590444444442,
+        0.6431774313888888,
+        0.8548184494444444
+      ],
+      "steer_2": [
+        0.7550137222222222,
+        0.622205038611111,
+        0.876449985
+      ],
+      "steer_5": [
+        0.8106181777777778,
+        0.7215267155555555,
+        0.8887010144444443
+      ],
+      "steer_10": [
+        0.7450064666666667,
+        0.6312675655555555,
+        0.8477122977777777
+      ],
+      "steer_15": [
+        0.7530277555555556,
+        0.6628766013888887,
+        0.8423556199999999
+      ]
+    },
+    "nll": {
+      "random_5": [
+        1.924178228888889,
+        1.875546118944444,
+        1.9717408677222221
+      ],
+      "random_15": [
+        2.4013044911111114,
+        2.3507630017222225,
+        2.452272281666667
+      ],
+      "steer_-5": [
+        2.9438888888888894,
+        2.801001800833334,
+        3.095650580555556
+      ],
+      "steer_0": [
+        1.5642680444444443,
+        1.4734021002777777,
+        1.6434098474999996
+      ],
+      "steer_2": [
+        1.6390724444444442,
+        1.5672958572222222,
+        1.710079828611111
+      ],
+      "steer_5": [
+        1.919456511111111,
+        1.8548942522222225,
+        1.9856485966666666
+      ],
+      "steer_10": [
+        2.4628709888888887,
+        2.355434556111111,
+        2.573110575833333
+      ],
+      "steer_15": [
+        2.985945544444445,
+        2.837718750555556,
+        3.1252171724999998
+      ]
+    }
+  },
+  "primary": {
+    "contrast": "P_pos(steer,5) - P_pos(random,5)",
+    "mean": 0.12547466222222228,
+    "lo": 0.04508822288888892,
+    "hi": 0.20306060211111113,
+    "dz": 0.5577707037517201,
+    "verdict": "supported"
+  },
+  "h2_spearman": {
+    "mean_rho": 0.07428571428571432,
+    "lo": -0.0857142857142857,
+    "hi": 0.22476190476190483,
+    "n_defined": 30,
+    "verdict": "falsified"
+  },
+  "secondary": [
+    {
+      "contrast": "steer_-5 - steer_0",
+      "mean": -0.0248560777777778,
+      "lo": -0.1527021861111111,
+      "hi": 0.10481626138888879,
+      "p_raw": 0.4898460879921913,
+      "p_holm": 1.0
+    },
+    {
+      "contrast": "steer_2 - steer_0",
+      "mean": 0.0007546777777777606,
+      "lo": -0.08800240583333332,
+      "hi": 0.0792276158333333,
+      "p_raw": 0.10943205840885639,
+      "p_holm": 0.43772823363542557
+    },
+    {
+      "contrast": "steer_5 - steer_0",
+      "mean": 0.05635913333333334,
+      "lo": -0.04157126277777775,
+      "hi": 0.15515925749999995,
+      "p_raw": 0.044907208532094955,
+      "p_holm": 0.22453604266047478
+    },
+    {
+      "contrast": "steer_10 - steer_0",
+      "mean": -0.009252577777777774,
+      "lo": -0.11347399694444446,
+      "hi": 0.09666284666666654,
+      "p_raw": 0.6408254038542509,
+      "p_holm": 1.0
+    },
+    {
+      "contrast": "steer_15 - steer_0",
+      "mean": -0.001231288888888915,
+      "lo": -0.11298387999999998,
+      "hi": 0.10996207138888885,
+      "p_raw": 1.0,
+      "p_holm": 1.0
+    },
+    {
+      "contrast": "steer_15 - random_15",
+      "mean": 0.1328036111111111,
+      "lo": 0.033849893888888885,
+      "hi": 0.22820405300000002,
+      "p_raw": 0.01283373311161995,
+      "p_holm": 0.0770023986697197
+    }
+  ],
+  "h3_sign": {
+    "contrast": "steer_-5 - steer_0",
+    "mean": -0.0248560777777778,
+    "lo": -0.1527021861111111,
+    "hi": 0.10481626138888879,
+    "p_raw": 0.4898460879921913,
+    "p_holm": 1.0,
+    "verdict": "falsified"
+  },
+  "fluency": {
+    "random_5": {
+      "mean": 0.35991018444444445,
+      "lo": 0.2735977967777778,
+      "hi": 0.4588533823333332
+    },
+    "random_15": {
+      "mean": 0.8370364466666669,
+      "lo": 0.7479273512777778,
+      "hi": 0.9375158947222223
+    },
+    "steer_-5": {
+      "mean": 1.3796208444444444,
+      "lo": 1.2255787116666668,
+      "hi": 1.5437958088888888
+    },
+    "steer_2": {
+      "mean": 0.07480439999999998,
+      "lo": 0.009117855555555504,
+      "hi": 0.14227123083333332
+    },
+    "steer_5": {
+      "mean": 0.35518846666666676,
+      "lo": 0.2801185402777778,
+      "hi": 0.44246075944444435
+    },
+    "steer_10": {
+      "mean": 0.8986029444444443,
+      "lo": 0.7648001522222223,
+      "hi": 1.0346596138888884
+    },
+    "steer_15": {
+      "mean": 1.4216775,
+      "lo": 1.2588499772222221,
+      "hi": 1.5837901447222225
+    }
+  },
+  "primary_per_seed": {
+    "0": {
+      "mean": 0.12001079999999997,
+      "lo": -0.005314676166666649,
+      "hi": 0.2383148663333333
+    },
+    "1": {
+      "mean": 0.14405675999999995,
+      "lo": 0.0012462350000000465,
+      "hi": 0.2854382158333332
+    },
+    "2": {
+      "mean": 0.11235642666666669,
+      "lo": -0.041121751666666644,
+      "hi": 0.26215010816666656
+    }
+  },
+  "examples": [
+    {
+      "prompt": "Definitely not your typical Polizia, Redneck just never",
+      "alpha_0": " ceases to amaze me.\n\nI've been following the story of this family for a while now and I'm amazed at how they have managed to survive in such harsh conditions. The video below",
+      "alpha_5": " ceases to amaze me. I was looking for a polizia to use in my own kitchen and this is it! It's so simple, easy to make and makes such a great addition to"
+    },
+    {
+      "prompt": "Christian Duguay directed this tidy little espionage thriller",
+      "alpha_0": " about a man who finds himself in the middle of a CIA plot to assassinate the president of the United States. He is recruited by an ex-spy to help him get into the inner circle and",
+      "alpha_5": ", which has a lovely, dark and eerie atmosphere.\n\nThe world is falling apart around us. It's not just the rising oceans or climate change or nuclear war; it's the creeping erosion"
+    },
+    {
+      "prompt": "Being an American service member please believe me",
+      "alpha_0": " when I say that I have been there. I have been to Iraq and Afghanistan. I have seen the suffering of my fellow soldiers, Marines, Sailors and Airmen.\n\nI've",
+      "alpha_5": " when I say this.\n\n\nI was in the military for 12 years and have seen it all. I know what it is to be in a war zone, and that is why I love my"
+    }
+  ]
+}

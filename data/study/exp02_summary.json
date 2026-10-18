@@ -1,0 +1,248 @@
+{
+  "n_prompts": 190,
+  "n_completions": 9120,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "means": {
+    "p_pos": {
+      "random_5": [
+        0.6792121417543859,
+        0.6471858218070174,
+        0.709921874491228
+      ],
+      "random_15": [
+        0.633771232631579,
+        0.6083611087982456,
+        0.6574000490614035
+      ],
+      "steer_-5": [
+        0.7167949824561405,
+        0.6730354012719298,
+        0.759244445219298
+      ],
+      "steer_0": [
+        0.6648967736842105,
+        0.615126363508772,
+        0.7132105497807018
+      ],
+      "steer_2": [
+        0.7659664421052632,
+        0.7214547310964913,
+        0.8094526938157892
+      ],
+      "steer_5": [
+        0.8112649666666667,
+        0.7706270685964912,
+        0.8484712099561402
+      ],
+      "steer_10": [
+        0.8327123263157894,
+        0.7996228874561404,
+        0.8633521303947368
+      ],
+      "steer_15": [
+        0.7741099280701754,
+        0.7368133796929824,
+        0.8085194251754386
+      ]
+    },
+    "nll": {
+      "random_5": [
+        1.9506180014035088,
+        1.9303479979210527,
+        1.9710852026754389
+      ],
+      "random_15": [
+        2.334063618596491,
+        2.3106028845438598,
+        2.3577351084473683
+      ],
+      "steer_-5": [
+        2.839608542105263,
+        2.7869853801315783,
+        2.8917705657017545
+      ],
+      "steer_0": [
+        1.5928619894736842,
+        1.5713544144736842,
+        1.614016994035088
+      ],
+      "steer_2": [
+        1.7152369245614032,
+        1.6893899949122808,
+        1.7415880421491228
+      ],
+      "steer_5": [
+        1.9612393789473683,
+        1.9295221500877193,
+        1.9936217569298247
+      ],
+      "steer_10": [
+        2.483676366666667,
+        2.443905568464912,
+        2.523943786710526
+      ],
+      "steer_15": [
+        2.9731413456140348,
+        2.927224947105263,
+        3.019920800307018
+      ]
+    }
+  },
+  "primary": {
+    "contrast": "P_pos(steer,5) - P_pos(steer,0)",
+    "mean": 0.14636819298245612,
+    "lo": 0.10228373644736842,
+    "hi": 0.19198539570175435,
+    "dz": 0.45918543946568935,
+    "verdict": "supported"
+  },
+  "h2_spearman": {
+    "mean_rho": 0.16371988156044334,
+    "lo": 0.10135338345864663,
+    "hi": 0.2259755206581877,
+    "n_defined": 190,
+    "verdict": "supported"
+  },
+  "secondary": [
+    {
+      "contrast": "steer_-5 - steer_0",
+      "mean": 0.05189820877192983,
+      "lo": -0.0003988001315789205,
+      "hi": 0.10480690833333334,
+      "p_raw": 0.4747683902484392,
+      "p_holm": 0.4747683902484392
+    },
+    {
+      "contrast": "steer_2 - steer_0",
+      "mean": 0.10106966842105264,
+      "lo": 0.055748281885964895,
+      "hi": 0.14822782114035088,
+      "p_raw": 1.7518093159260143e-05,
+      "p_holm": 5.255427947778043e-05
+    },
+    {
+      "contrast": "steer_5 - steer_0",
+      "mean": 0.14636819298245612,
+      "lo": 0.10228373644736842,
+      "hi": 0.19198539570175435,
+      "p_raw": 1.7259784872869176e-10,
+      "p_holm": 8.629892436434588e-10
+    },
+    {
+      "contrast": "steer_10 - steer_0",
+      "mean": 0.1678155526315789,
+      "lo": 0.11793721451754387,
+      "hi": 0.2167592539473684,
+      "p_raw": 3.1040580219408716e-08,
+      "p_holm": 1.2416232087763486e-07
+    },
+    {
+      "contrast": "steer_15 - steer_0",
+      "mean": 0.10921315438596489,
+      "lo": 0.05758697109649126,
+      "hi": 0.16197424754385958,
+      "p_raw": 0.00040903340850304,
+      "p_holm": 0.00081806681700608
+    },
+    {
+      "contrast": "steer_15 - random_15",
+      "mean": 0.14033869543859648,
+      "lo": 0.10353603151754386,
+      "hi": 0.17508680894736844,
+      "p_raw": 2.2992757309260494e-12,
+      "p_holm": 1.3795654385556296e-11
+    },
+    {
+      "contrast": "steer_5 - random_5",
+      "mean": 0.1320528249122807,
+      "lo": 0.0973468575263158,
+      "hi": 0.16644346386842102,
+      "p_raw": 1.7482358447406617e-12,
+      "p_holm": 1.2237650913184633e-11
+    }
+  ],
+  "h3_sign": {
+    "contrast": "steer_-5 - steer_0",
+    "mean": 0.05189820877192983,
+    "lo": -0.0003988001315789205,
+    "hi": 0.10480690833333334,
+    "p_raw": 0.4747683902484392,
+    "p_holm": 0.4747683902484392,
+    "verdict": "falsified"
+  },
+  "fluency": {
+    "random_5": {
+      "mean": 0.3577560119298246,
+      "lo": 0.33360495774561405,
+      "hi": 0.38273056286842105
+    },
+    "random_15": {
+      "mean": 0.7412016291228068,
+      "lo": 0.7121595067982456,
+      "hi": 0.7705297969824562
+    },
+    "steer_-5": {
+      "mean": 1.2467465526315789,
+      "lo": 1.1906843048245617,
+      "hi": 1.3020175486842105
+    },
+    "steer_2": {
+      "mean": 0.12237493508771927,
+      "lo": 0.09628821710526317,
+      "hi": 0.1500629242982456
+    },
+    "steer_5": {
+      "mean": 0.3683773894736842,
+      "lo": 0.3346277410964912,
+      "hi": 0.4038222213596492
+    },
+    "steer_10": {
+      "mean": 0.8908143771929827,
+      "lo": 0.8502910304385967,
+      "hi": 0.932893029122807
+    },
+    "steer_15": {
+      "mean": 1.3802793561403506,
+      "lo": 1.3321253297368423,
+      "hi": 1.4300959749999997
+    }
+  },
+  "primary_per_seed": {
+    "0": {
+      "mean": 0.14620751052631578,
+      "lo": 0.0715776010526316,
+      "hi": 0.22196975236842104
+    },
+    "1": {
+      "mean": 0.11607897894736839,
+      "lo": 0.04314679421052631,
+      "hi": 0.18918638947368419
+    },
+    "2": {
+      "mean": 0.1768180894736842,
+      "lo": 0.10187426473684212,
+      "hi": 0.2509325496052631
+    }
+  },
+  "examples": [
+    {
+      "prompt": "This movie starts out great, and sucks you",
+      "alpha_0": " in with its atmosphere. It's a bit slow at first, but once the action starts it's just awesome. The ending is great too! I would recommend this to anyone who likes sci-fi",
+      "alpha_5": " in.\n\nI love the music, I love the art, I love the writing. But what's so bad about it? What's so wrong with it?\n\nI've been listening"
+    },
+    {
+      "prompt": "In The Line of Fire gives us a",
+      "alpha_0": " look at the life of the great sniper, John \"The Rifleman\" Lee. He was a member of the 1st Special Service Force (the Army's elite sniper unit) and fought in Vietnam",
+      "alpha_5": " look at the amazing character of D'Artagnan, and how he's able to survive being shot in the head by a knight.\n\nI'm not sure if this is what you're"
+    },
+    {
+      "prompt": "The premise of this film is the only",
+      "alpha_0": " thing that makes sense. It's a story about a young man who gets involved in an underground fight club and discovers he has the ability to change his size. The other characters are there to make him",
+      "alpha_5": " thing that can make me stop writing. It's like a beautiful piece of art, it's like a poem, it's like a dream.\n\nI don't know how to describe what I"
+    }
+  ]
+}

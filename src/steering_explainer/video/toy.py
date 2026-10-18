@@ -60,6 +60,13 @@ def vector_ops(a: Vec, b: Vec) -> dict:
             "|b|^2": dot(b, b), "|b|": norm(b)}
 
 
+# Chapter 06: illustrative 2-D word positions (NOT real word vectors) with parallel "gender" offsets.
+TOY_WORDS = {"man": (1, 1), "woman": (1, Fraction(13, 5)), "king": (4, Fraction(13, 10)), "queen": (4, Fraction(29, 10))}
+
+# Chapter 03: a toy embedding table for a 3-token vocabulary, d = 2 ("love" -> (1, 0) is spoken).
+TOY_EMBED = {"cat": (0, 1), "dog": (Fraction(1, 10), Fraction(9, 10)), "love": (1, 0)}
+
+
 def residual_toy() -> dict:
     """Chapter 04: a 2-D residual stream that layers *add* updates to (pre-LN GPT-2 style)."""
     h0 = (1, 0)  # embedding of the current token

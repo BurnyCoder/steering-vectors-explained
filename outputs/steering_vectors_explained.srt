@@ -1,0 +1,760 @@
+1
+00:00:02,200 --> 00:00:06,654
+A real experiment. A language model is a program that continues text.
+
+2
+00:00:06,754 --> 00:00:10,482
+We give one, GPT-2 XL, the start of a sentence, called the
+
+3
+00:00:10,582 --> 00:00:14,772
+prompt: "I hate you because". Left alone, it continues like this.
+
+4
+00:00:14,866 --> 00:00:17,732
+Now we run it again with the same random choices, but
+
+5
+00:00:17,832 --> 00:00:20,809
+we add one fixed list of numbers inside the model while
+
+6
+00:00:20,909 --> 00:00:24,390
+it reads. Same prompt, same model. Here is the new continuation.
+
+7
+00:00:24,466 --> 00:00:27,714
+A list of numbers is called a vector. A vector that changes a model's
+
+8
+00:00:27,814 --> 00:00:31,110
+behavior when you add it inside the model is called a steering vector.
+
+9
+00:00:31,200 --> 00:00:34,448
+These two lines are the whole idea: the first builds a steering
+
+10
+00:00:34,548 --> 00:00:37,584
+vector, the second adds it. By the end of this video, every
+
+11
+00:00:37,684 --> 00:00:41,252
+symbol here will be defined from scratch, each with a worked example.
+
+12
+00:00:43,833 --> 00:00:48,736
+A scalar is a single real number, like 3, minus one half, or 0.665.
+
+13
+00:00:48,836 --> 00:00:54,113
+The set of all real numbers is written as a double-struck R. The rounded
+
+14
+00:00:54,213 --> 00:00:57,773
+E reads "is an element of": 3 is an element of R.
+
+15
+00:00:58,866 --> 00:01:02,533
+A vector is an ordered list of real numbers. Each entry is
+
+16
+00:01:02,633 --> 00:01:06,755
+a component. The vector two, one has first component 2 and second
+
+17
+00:01:06,855 --> 00:01:10,718
+component 1. Drawn as an arrow: two steps right, one step up.
+
+18
+00:01:10,799 --> 00:01:14,604
+The number of components is the dimension, written d. All vectors
+
+19
+00:01:14,704 --> 00:01:17,428
+with d real components form the set R to the d.
+
+20
+00:01:17,528 --> 00:01:19,531
+So two, one is an element of R two.
+
+21
+00:01:20,599 --> 00:01:24,926
+Inside GPT-2 XL, text is represented by vectors with d equal to
+
+22
+00:01:25,026 --> 00:01:30,969
+1,600 components. They are computed using about 1.6 billion numbers, called parameters
+
+23
+00:01:31,069 --> 00:01:35,115
+or weights, learned from text in a process called training.
+
+24
+00:01:38,500 --> 00:01:41,711
+Take a equal to one, two, and b equal to three,
+
+25
+00:01:41,811 --> 00:01:46,150
+minus one. Addition adds matching components: a plus b is four,
+
+26
+00:01:46,250 --> 00:01:49,392
+one. In the picture, b's tail sits at a's tip.
+
+27
+00:01:49,466 --> 00:01:53,563
+Multiplying by a scalar multiplies every component. Two times
+
+28
+00:01:53,663 --> 00:01:56,659
+b is six, minus two: same direction, twice as
+
+29
+00:01:56,759 --> 00:01:59,686
+long. A negative scalar flips the direction.
+
+30
+00:01:59,766 --> 00:02:03,500
+Subtraction adds the flipped vector: a minus b is minus two,
+
+31
+00:02:03,600 --> 00:02:06,376
+three, the arrow from the tip of b to the tip
+
+32
+00:02:06,476 --> 00:02:09,890
+of a. The difference of two vectors is itself a vector.
+
+33
+00:02:10,966 --> 00:02:15,249
+The Greek capital sigma means: add up every term. The mean, or
+
+34
+00:02:15,349 --> 00:02:19,208
+average, of n vectors is their sum times one over n. The
+
+35
+00:02:19,308 --> 00:02:22,530
+mean of one, two and three, four is two, three.
+
+36
+00:02:23,600 --> 00:02:29,128
+The dot product multiplies matching components and adds the results into one scalar:
+
+37
+00:02:29,228 --> 00:02:33,014
+a dot b is one times three plus two times minus one, which
+
+38
+00:02:33,114 --> 00:02:37,503
+is 1. The norm, written with double bars, is a vector's length: the
+
+39
+00:02:37,603 --> 00:02:41,657
+square root of the vector dotted with itself. The norm of b is
+
+40
+00:02:41,757 --> 00:02:46,012
+the square root of ten, about 3.16. Dividing a vector by its norm
+
+41
+00:02:46,112 --> 00:02:49,564
+gives a unit vector, of length one: a pure direction.
+
+42
+00:02:52,133 --> 00:02:56,220
+A function takes each input to exactly one output. f from X to
+
+43
+00:02:56,320 --> 00:02:59,665
+Y takes elements of a set X to elements of a set Y.
+
+44
+00:03:00,733 --> 00:03:06,264
+A language model doesn't read letters. A tokenizer, a fixed function, cuts
+
+45
+00:03:06,364 --> 00:03:11,440
+text into tokens, words or pieces of words, each with a whole-number
+
+46
+00:03:11,540 --> 00:03:15,702
+ID. The set of all tokens is the vocabulary, V, and bars
+
+47
+00:03:15,802 --> 00:03:20,649
+around a set mean its size. GPT-2's vocabulary has 50,257 tokens.
+
+48
+00:03:21,733 --> 00:03:25,723
+Our prompt becomes these tokens. GPT-2 also starts every text
+
+49
+00:03:25,823 --> 00:03:29,478
+with a special end-of-text token. A token's place in the
+
+50
+00:03:29,578 --> 00:03:32,697
+sequence is its position, t, counting from zero.
+
+51
+00:03:33,766 --> 00:03:37,521
+An embedding is a function from tokens to vectors: it looks up a
+
+52
+00:03:37,621 --> 00:03:41,195
+learned vector in R d for each token and adds another for its
+
+53
+00:03:41,295 --> 00:03:45,894
+position. In a toy, three-token vocabulary, "love" might map to one, zero. Now
+
+54
+00:03:45,994 --> 00:03:49,026
+the text is a sequence of vectors, one per position.
+
+55
+00:03:51,600 --> 00:03:55,432
+The model then processes these vectors in a fixed number
+
+56
+00:03:55,532 --> 00:03:58,732
+of steps called layers. GPT-2 XL has L equal to
+
+57
+00:03:58,832 --> 00:04:01,892
+48, numbered by ell from zero to L minus one.
+
+58
+00:04:02,966 --> 00:04:06,594
+Each layer has two parts, both functions. Attention lets every
+
+59
+00:04:06,694 --> 00:04:10,983
+position gather information from earlier positions; the MLP, a multilayer
+
+60
+00:04:11,083 --> 00:04:14,410
+perceptron, transforms each position's vector on its own.
+
+61
+00:04:15,500 --> 00:04:19,147
+Both add their outputs onto a running vector at every position:
+
+62
+00:04:19,247 --> 00:04:23,490
+the residual stream. Leaving out a rescaling step called normalization, h
+
+63
+00:04:23,590 --> 00:04:26,762
+sub ell plus one is h sub ell, plus attention's output,
+
+64
+00:04:26,862 --> 00:04:30,271
+plus the MLP's output. As Elhage and colleagues put it, the
+
+65
+00:04:30,371 --> 00:04:33,484
+residual stream is simply the sum of the output of all
+
+66
+00:04:33,584 --> 00:04:36,280
+the previous layers and the original embedding.
+
+67
+00:04:36,966 --> 00:04:41,411
+In two dimensions: the stream starts at one, zero. Attention writes
+
+68
+00:04:41,511 --> 00:04:45,345
+zero, one, giving one, one. The MLP writes one half, minus
+
+69
+00:04:45,445 --> 00:04:48,194
+one half, giving one and a half, one half.
+
+70
+00:04:48,866 --> 00:04:53,680
+h sub ell, superscript t, is the residual stream entering layer ell
+
+71
+00:04:53,780 --> 00:04:59,034
+at position t. Numbers computed inside a model like this are activations;
+
+72
+00:04:59,134 --> 00:05:03,288
+one run through all layers is a forward pass. In GPT-2 XL,
+
+73
+00:05:03,388 --> 00:05:07,102
+the stream entering layer 6 at "hate" has norm 88.7.
+
+74
+00:05:09,700 --> 00:05:12,942
+To turn the final vector back into text, the model uses a
+
+75
+00:05:13,042 --> 00:05:17,164
+matrix, a rectangular grid of numbers. Matrix times vector takes the dot
+
+76
+00:05:17,264 --> 00:05:20,448
+product of each row with the vector: one number per row.
+
+77
+00:05:21,533 --> 00:05:24,187
+The unembedding matrix, W sub U, has one row
+
+78
+00:05:24,287 --> 00:05:27,756
+per vocabulary token. Times the final residual stream, it
+
+79
+00:05:27,856 --> 00:05:30,385
+gives one score per token, called a logit.
+
+80
+00:05:31,466 --> 00:05:37,023
+Softmax turns logits into probabilities: raise e to each logit,
+
+81
+00:05:37,123 --> 00:05:41,871
+then divide by the total. Logits two, one, zero become
+
+82
+00:05:41,971 --> 00:05:46,630
+0.665, 0.245 and 0.090: all positive, summing to one.
+
+83
+00:05:47,700 --> 00:05:51,424
+The model then samples: it picks the next token at random
+
+84
+00:05:51,524 --> 00:05:56,390
+with those probabilities, appends it, and repeats. After our prompt, GPT-2
+
+85
+00:05:56,490 --> 00:06:00,416
+XL's most likely next token is "you", with probability 0.59.
+
+86
+00:06:03,000 --> 00:06:05,600
+Why would adding a vector change behavior? A unit
+
+87
+00:06:05,700 --> 00:06:09,457
+vector describes a direction, and the linear representation hypothesis
+
+88
+00:06:09,557 --> 00:06:12,818
+is the idea that high-level concepts are represented linearly
+
+89
+00:06:12,918 --> 00:06:15,188
+as directions in some representation space.
+
+90
+00:06:16,266 --> 00:06:20,185
+An early clue came from word vectors: Mikolov and colleagues reported
+
+91
+00:06:20,285 --> 00:06:23,389
+that King minus Man plus Woman results in a vector very
+
+92
+00:06:23,489 --> 00:06:26,942
+close to Queen. Woman minus Man acts like a gender direction.
+
+93
+00:06:27,633 --> 00:06:30,586
+A toy picture: if one axis meant how positive the text
+
+94
+00:06:30,686 --> 00:06:33,865
+is, moving a vector along it would make later layers treat
+
+95
+00:06:33,965 --> 00:06:37,541
+the text as more positive. Steering looks for such directions and
+
+96
+00:06:37,641 --> 00:06:40,594
+pushes along them. But it is a hypothesis: it can hold
+
+97
+00:06:40,694 --> 00:06:43,421
+for some concepts and layers, and fail for others.
+
+98
+00:06:46,000 --> 00:06:49,821
+To find a direction, compare two inputs that differ mainly in
+
+99
+00:06:49,921 --> 00:06:53,486
+one concept: a contrast pair, p plus and p minus. ActAdd,
+
+100
+00:06:53,586 --> 00:06:58,114
+short for Activation Addition, by Turner and colleagues, uses "Love" and
+
+101
+00:06:58,214 --> 00:07:01,908
+"Hate" and needs no training: a single pair of data points.
+
+102
+00:07:03,000 --> 00:07:07,824
+Run each prompt through the model, read the residual stream entering layer
+
+103
+00:07:07,924 --> 00:07:11,284
+ell, and subtract: h A equals h ell of p plus, minus
+
+104
+00:07:11,384 --> 00:07:15,676
+h ell of p minus, one difference per position. GPT-2 splits "Hate"
+
+105
+00:07:15,776 --> 00:07:19,004
+into two tokens, so "Love" is padded with a space.
+
+106
+00:07:19,700 --> 00:07:23,953
+One pair is noisy. CAA, Contrastive Activation Addition, by Rimsky and
+
+107
+00:07:24,053 --> 00:07:27,312
+colleagues, uses a dataset D of triples: a prompt p, a
+
+108
+00:07:27,412 --> 00:07:31,230
+completion c plus showing the behavior, and c minus showing its
+
+109
+00:07:31,330 --> 00:07:34,091
+opposite. a sub ell of p and c is the residual
+
+110
+00:07:34,191 --> 00:07:37,264
+stream at layer ell at the completion's last token.
+
+111
+00:07:37,933 --> 00:07:42,008
+So: take each triple's difference of activations, add them up with
+
+112
+00:07:42,108 --> 00:07:45,044
+sigma, and multiply by one over the size of D. A
+
+113
+00:07:45,144 --> 00:07:48,777
+mean difference. ActAdd is the case where D holds one pair.
+
+114
+00:07:54,133 --> 00:07:57,755
+Toy example: differences two point one, zero point three;
+
+115
+00:07:57,855 --> 00:08:00,954
+one point eight, minus zero point five; two point
+
+116
+00:08:01,054 --> 00:08:04,023
+one, zero point two. Their mean is exactly two,
+
+117
+00:08:04,123 --> 00:08:08,529
+zero: the shared direction survives, the unrelated component cancels.
+
+118
+00:08:09,200 --> 00:08:12,429
+In GPT-2 XL at layer 6, the "Love" and "Hate"
+
+119
+00:08:12,529 --> 00:08:16,349
+activations have norms of about 98 and 97, and cosine
+
+120
+00:08:16,449 --> 00:08:20,714
+similarity, the dot product of their unit vectors, of 0.72.
+
+121
+00:08:20,814 --> 00:08:25,079
+Their difference has norm 73.8. At position zero both share
+
+122
+00:08:25,179 --> 00:08:29,740
+the end-of-text token, so the difference there is exactly zero.
+
+123
+00:08:32,333 --> 00:08:36,562
+Steering is one addition. During the forward pass, at layer ell and
+
+124
+00:08:36,662 --> 00:08:40,374
+each chosen position t, h becomes h plus alpha times v, the
+
+125
+00:08:40,474 --> 00:08:45,285
+steered activation h tilde. Alpha is a scalar, the steering coefficient: its
+
+126
+00:08:45,385 --> 00:08:49,937
+size sets strength, its sign direction. The weights never change; in the
+
+127
+00:08:50,037 --> 00:08:54,073
+ActAdd paper's words, these vectors act like virtual bias terms.
+
+128
+00:08:55,166 --> 00:08:58,339
+T is the set of edited positions. ActAdd adds h
+
+129
+00:08:58,439 --> 00:09:01,682
+A at the first positions of the prompt. CAA adds
+
+130
+00:09:01,782 --> 00:09:05,722
+its vector at all token positions after the user's prompt.
+
+131
+00:09:06,399 --> 00:09:10,666
+Toy example: h is one, one; v is two, zero; alpha is one
+
+132
+00:09:10,766 --> 00:09:15,579
+and a half; so h tilde is four, one. With unembedding rows one,
+
+133
+00:09:15,679 --> 00:09:20,959
+zero for "love", minus one, zero for "hate", and zero, one for "the",
+
+134
+00:09:21,059 --> 00:09:25,950
+the logits go from one, minus one, one to four, minus four, one,
+
+135
+00:09:26,050 --> 00:09:29,771
+and after softmax "love" rises from 0.47 to 0.95.
+
+136
+00:09:30,466 --> 00:09:33,764
+Now GPT-2 XL with the original settings: "Love" minus
+
+137
+00:09:33,864 --> 00:09:38,316
+"Hate", before layer 6, coefficient plus five. Next-token probabilities
+
+138
+00:09:38,416 --> 00:09:42,355
+shift; "they" gains most. Then the first sampled continuations,
+
+139
+00:09:42,455 --> 00:09:46,458
+same random choices, not cherry-picked; the original blog post's
+
+140
+00:09:46,558 --> 00:09:48,510
+examples were the best of three.
+
+141
+00:09:51,100 --> 00:09:54,765
+One example proves little, so we tested it, writing down our
+
+142
+00:09:54,865 --> 00:09:59,032
+hypotheses and analysis before collecting any data. A first run used
+
+143
+00:09:59,132 --> 00:10:02,797
+30 openings of real movie reviews; a second run, sized using
+
+144
+00:10:02,897 --> 00:10:06,687
+the first, used 190 new ones. Each opening was continued under
+
+145
+00:10:06,787 --> 00:10:09,072
+six values of alpha, three times each.
+
+146
+00:10:09,766 --> 00:10:12,913
+A control is a comparison condition identical except for
+
+147
+00:10:13,013 --> 00:10:16,161
+the thing being tested. Ours adds random directions with
+
+148
+00:10:16,261 --> 00:10:18,306
+the same norm as the steering vector.
+
+149
+00:10:19,000 --> 00:10:22,901
+A sentiment classifier, a separate model trained to judge how positive
+
+150
+00:10:23,001 --> 00:10:25,932
+a text is, scored each continuation from zero to one.
+
+151
+00:10:27,000 --> 00:10:31,647
+In the larger run, average positivity was 0.66 without steering and 0.81
+
+152
+00:10:31,747 --> 00:10:35,999
+at alpha five, while random directions of the same size gave 0.68.
+
+153
+00:10:36,099 --> 00:10:41,208
+Error bars are 95 percent confidence intervals from the bootstrap: resample the
+
+154
+00:10:41,308 --> 00:10:45,429
+prompts ten thousand times and keep the middle 95 percent of the
+
+155
+00:10:45,529 --> 00:10:49,913
+averages. Steering minus no steering at alpha five is +0.15, with an
+
+156
+00:10:50,013 --> 00:10:54,924
+interval from +0.10 to +0.19: our main hypothesis is supported, and steering
+
+157
+00:10:55,024 --> 00:10:59,342
+beat random directions in both runs. But more is not always better:
+
+158
+00:10:59,442 --> 00:11:03,167
+positivity peaked at alpha 10 and fell back at 15. And the
+
+159
+00:11:03,267 --> 00:11:07,255
+negative alpha did not make text less positive. A check we did
+
+160
+00:11:07,355 --> 00:11:11,145
+not plan in advance hints at why: at minus five, 29 percent
+
+161
+00:11:11,245 --> 00:11:16,223
+of continuations contain the word hate itself, versus under 1 percent without
+
+162
+00:11:16,323 --> 00:11:19,652
+steering, and at plus five, 62 percent contain love.
+
+163
+00:11:20,733 --> 00:11:25,131
+The price: negative log-likelihood, how surprised the unsteered model is
+
+164
+00:11:25,231 --> 00:11:29,068
+by each continuation per token, where higher means less natural
+
+165
+00:11:29,168 --> 00:11:32,129
+text. At alpha fifteen it rose by 1.38 per token,
+
+166
+00:11:32,229 --> 00:11:35,753
+compared with 0.74 for random directions of the same size.
+
+167
+00:11:38,333 --> 00:11:43,025
+Steering has limits. The injection coefficient cannot be increased indefinitely.
+
+168
+00:11:43,125 --> 00:11:46,079
+Middle layers tend to work best. It needs access to
+
+169
+00:11:46,179 --> 00:11:50,272
+the model's internals: ActAdd is not immediately applicable given only
+
+170
+00:11:50,372 --> 00:11:53,327
+API access to a model. And Tan and colleagues found
+
+171
+00:11:53,427 --> 00:11:57,580
+that steerability is highly variable across different inputs; for some,
+
+172
+00:11:57,680 --> 00:11:59,857
+steering even has the opposite effect.
+
+173
+00:12:00,533 --> 00:12:06,157
+Close relatives: Inference-Time Intervention shifts activations along chosen directions inside
+
+174
+00:12:06,257 --> 00:12:10,845
+a few attention heads, the sub-parts of attention. Representation engineering
+
+175
+00:12:10,945 --> 00:12:15,534
+reads and controls such directions. Directional ablation removes a direction:
+
+176
+00:12:15,634 --> 00:12:18,518
+subtract from x its projection, r hat dot x times
+
+177
+00:12:18,618 --> 00:12:21,075
+r hat, the part of x along the unit vector
+
+178
+00:12:21,175 --> 00:12:24,546
+r hat. Arditi and colleagues found refusal is mediated by
+
+179
+00:12:24,646 --> 00:12:29,113
+a one-dimensional subspace: a single direction. And Anthropic's Golden Gate
+
+180
+00:12:29,213 --> 00:12:32,584
+Claude fixed one learned feature, a direction tied to the
+
+181
+00:12:32,684 --> 00:12:34,777
+Golden Gate Bridge, at a high value.
+
+182
+00:12:36,366 --> 00:12:41,096
+The two lines again, and now every symbol has a meaning. The steering vector
+
+183
+00:12:41,196 --> 00:12:44,211
+v sub ell is an element of R d. D is a finite set
+
+184
+00:12:44,311 --> 00:12:48,660
+of triples; its size is a whole number. Each triple holds a prompt and
+
+185
+00:12:48,760 --> 00:12:53,491
+two completions, and a sub ell gives their activation at layer ell. Below, h
+
+186
+00:12:53,591 --> 00:12:57,750
+is the residual stream at layer ell and position t, alpha is a real
+
+187
+00:12:57,850 --> 00:13:00,674
+scalar, and T is the set of positions we edit.
+
+188
+00:13:00,766 --> 00:13:03,989
+Build a direction by contrasting examples, then add it while
+
+189
+00:13:04,089 --> 00:13:07,090
+the model runs. That is a steering vector. Every source,
+
+190
+00:13:07,190 --> 00:13:10,026
+number and line of code is linked in the description.
+

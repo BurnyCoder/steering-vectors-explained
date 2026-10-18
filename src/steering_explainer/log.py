@@ -20,6 +20,8 @@ def setup_logging(log_dir: Path) -> Path:
     if _configured is not None:  # idempotent: later calls reuse the same file
         return _configured
     log_dir.mkdir(parents=True, exist_ok=True)  # logs/ is gitignored, create on demand
+    if hasattr(sys.stdout, "reconfigure"):  # Windows consoles default to cp1252, which cannot print ℓ, α, …
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     path = log_dir / f"run_{datetime.now():%Y%m%d_%H%M%S}.log"  # e.g. logs/run_20261018_150102.log
     root = logging.getLogger()  # root logger: every module logger propagates here
     root.setLevel(logging.INFO)  # INFO and above are recorded

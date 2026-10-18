@@ -10,6 +10,7 @@ Global context (data flow):
   preregister2      exp01 effect size -> powered N -> reports/exp02_preregistration.md (committed before data)
   replicate         N fresh prompts, primary steer(5) - steer(0) -> data/study/exp02*.json(l) + figures
   posthoc           exploratory, NOT pre-registered: share of completions containing love/hate -> *_posthoc.json
+  figures           redraw both dose-response figures from the summary JSONs (no GPU, no new data)
   render            Manim chapters (edge-tts narration) -> media/videos/... (--chapters ch03 --quality l)
   inspect           one contact sheet of frames per chapter -> outputs/check/ (visual QA)
   assemble          ffmpeg concat + chapters + merged subtitles -> outputs/
@@ -104,16 +105,30 @@ def study(ctx: Context) -> None:
     run_prompts(ctx.s, *ctx.model_tok, _scorer(ctx), main_prompts, main_path)
 
 
+# run -> (summary file, dark figure for the video, figure title); light figures go to reports/figures/<run>_dose_response.png
+FIGURES = {"exp01": ("summary.json", "dose_response_dark.png", ""),
+           "exp02": ("exp02_summary.json", "exp02_dose_response_dark.png", "experiment 02")}
+
+
+def _draw_figures(ctx: Context, run: str) -> None:
+    """Light (report) + dark (video) dose-response figures of one run, read from its summary JSON."""
+    import json
+    from steering_explainer.study.plots import dose_response_figure
+    summary_file, dark, title = FIGURES[run]
+    d = ctx.s.data_dir / "study"
+    summary = json.loads((d / summary_file).read_text(encoding="utf-8"))
+    for path, theme in ((ctx.s.reports_dir / "figures" / f"{run}_dose_response.png", "light"), (d / dark, "dark")):
+        dose_response_figure(summary, path, theme, title, ctx.s.steer_layer, ctx.s.n_random)
+
+
 def analyze(ctx: Context) -> None:
     import json
     from steering_explainer.study.analyze import analyze as run_analysis, write_summary
-    from steering_explainer.study.plots import dose_response_figure
     _, main_path, _, summary_path = _study_paths(ctx)
     summary = run_analysis(ctx.s, main_path)
     write_summary(summary, summary_path)
     log.info("Study summary:\n%s", json.dumps(summary, indent=2, ensure_ascii=False))
-    dose_response_figure(summary, ctx.s.reports_dir / "figures" / "exp01_dose_response.png", "light")
-    dose_response_figure(summary, ctx.s.data_dir / "study" / "dose_response_dark.png", "dark")
+    _draw_figures(ctx, "exp01")
 
 
 def _exp02_n(ctx: Context) -> tuple[int, float, int]:
@@ -137,7 +152,6 @@ def preregister2(ctx: Context) -> None:
 def replicate(ctx: Context) -> None:
     import json
     from steering_explainer.study.analyze import analyze as run_analysis, write_summary
-    from steering_explainer.study.plots import dose_response_figure
     from steering_explainer.study.prompts import imdb_prefixes
     from steering_explainer.study.run import run_prompts
     n, _, off = _exp02_n(ctx)
@@ -147,14 +161,19 @@ def replicate(ctx: Context) -> None:
     summary = run_analysis(ctx.s, d / "exp02.jsonl", ref=("steer", 0.0))
     write_summary(summary, d / "exp02_summary.json")
     log.info("Experiment 02 summary:\n%s", json.dumps(summary, indent=2, ensure_ascii=False))
-    dose_response_figure(summary, ctx.s.reports_dir / "figures" / "exp02_dose_response.png", "light", "experiment 02")
-    dose_response_figure(summary, d / "exp02_dose_response_dark.png", "dark", "experiment 02")
+    _draw_figures(ctx, "exp02")
 
 
 def posthoc(ctx: Context) -> None:
     from steering_explainer.study.posthoc import write_posthoc
     write_posthoc(ctx.s)
     log.info("Post-hoc (exploratory) lexical analysis written to data/study/*_posthoc.json")
+
+
+def figures(ctx: Context) -> None:
+    for run in FIGURES:
+        _draw_figures(ctx, run)
+    log.info("Redrew dose-response figures for %s", list(FIGURES))
 
 
 def render(ctx: Context) -> None:
@@ -190,7 +209,7 @@ def inspect(ctx: Context) -> None:
 
 
 PHASES = {"verify_sources": verify_sources, "practical_example": practical_example, "preregister": preregister,
-          "pilot": pilot, "study": study, "analyze": analyze, "preregister2": preregister2, "replicate": replicate, "posthoc": posthoc,
+          "pilot": pilot, "study": study, "analyze": analyze, "preregister2": preregister2, "replicate": replicate, "posthoc": posthoc, "figures": figures,
           "render": render, "inspect": inspect, "assemble": assemble, "docs": docs, "tables": tables, "paper": paper}
 
 

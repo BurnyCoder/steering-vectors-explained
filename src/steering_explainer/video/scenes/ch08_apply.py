@@ -49,7 +49,9 @@ class Ch08(ChapterScene):
             row = token_row(ex["tokens_prompt"] + ["…", "…"], T.FG, 24).shift(DOWN * 0.4)
             n = len(ex["tokens_plus"])  # ActAdd edits the first n positions
             act = SurroundingRectangle(VGroup(*row[:n]), color=T.STEER, buff=0.08)
-            act_l = text("ActAdd: front positions 0…n−1", T.SIZE_SMALL, T.STEER).next_to(act, DOWN, buff=0.2).align_to(act, LEFT)
+            act_l = VGroup(text("ActAdd: front positions 0…n−1,", T.SIZE_SMALL, T.STEER),  # a different vector per position
+                           MathTex(r"v^{(t)} = h_A^{(t)}\ \text{(row } t \text{ of } h_A)", font_size=30, color=T.STEER)
+                           ).arrange(DOWN, aligned_edge=LEFT, buff=0.12).next_to(act, DOWN, buff=0.2).align_to(act, LEFT)
             caa = SurroundingRectangle(VGroup(*row[len(ex["tokens_prompt"]):]), color=T.ALPHA, buff=0.08)
             caa_l = text("CAA: every position after the prompt", T.SIZE_SMALL, T.ALPHA).next_to(caa, UP, buff=0.2).align_to(caa, RIGHT)
             q = quote_card("caa_positions", width=70, size=22).to_edge(DOWN, buff=0.6)
@@ -64,15 +66,19 @@ class Ch08(ChapterScene):
             hs = arrow(pl, st["h_steered"], T.ALPHA)
             calc = MathTex(r"\tilde h=" + tup(st["h"]) + r"+" + num(st["alpha"]) + r"\cdot" + tup(st["v"]) + "=" + tup(st["h_steered"]),
                            font_size=38).to_edge(UP, buff=1.3).shift(RIGHT * 2.2)
-            lg = MathTex(r"z: " + tup(st["logits_before"]) + r"\ \to\ " + tup(st["logits_after"]), font_size=38).next_to(calc, DOWN, buff=0.3)
+            rows = ",\\ ".join(rf"\text{{{tk.strip()}}}\,{tup(w)}" for tk, w in zip(st["tokens"], st["w_u"]))
+            wu = MathTex(r"W_U\ \text{rows: }" + rows, font_size=30, color=T.FG2).next_to(calc, DOWN, buff=0.25)
+            toy_note = text("toy: treat h̃ as the final stream", T.SIZE_SMALL - 4, T.MUTED).next_to(pl, DOWN, buff=0.2)
+            lg = MathTex(r"z = W_U\tilde h: " + tup(st["logits_before"]) + r"\ \to\ " + tup(st["logits_after"]),
+                         font_size=38).next_to(wu, DOWN, buff=0.25)
             before = prob_bars(st["tokens"], st["p_before"], T.VEC, 2.6)
             after = prob_bars(st["tokens"], st["p_after"], T.ALPHA, 2.6)
             bars = VGroup(VGroup(text("before", T.SIZE_SMALL, T.FG2), before).arrange(DOWN, aligned_edge=LEFT),
                           VGroup(text("after", T.SIZE_SMALL, T.FG2), after).arrange(DOWN, aligned_edge=LEFT)
                           ).arrange(RIGHT, buff=0.8).next_to(lg, DOWN, buff=0.5)
             self.play(Create(pl), GrowArrow(h))
-            self.play(GrowArrow(av), Write(calc))
-            self.play(GrowArrow(hs), Write(lg))
+            self.play(GrowArrow(av), Write(calc), FadeIn(toy_note))
+            self.play(GrowArrow(hs), FadeIn(wu), Write(lg))
             self.play(FadeIn(bars, lag_ratio=0.3))
         self.clear_stage(); self.add(head)
 

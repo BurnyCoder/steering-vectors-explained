@@ -14,16 +14,17 @@ chapters:
           the start of a sentence, called the prompt: "I hate you because". Left alone, it continues like this.
       - id: steered
         text: >
-          Now we run it again with the same random choices, but we add one fixed list of numbers inside
-          the model while it reads. Same prompt, same model. Here is the new continuation.
+          Now we run it again from the same random seed, a number that makes a run repeatable. This time,
+          while the model reads the start of the text, we add fixed lists of numbers inside it. Same prompt,
+          same model. Here is the new continuation.
       - id: name
         text: >
           A list of numbers is called a vector. A vector that changes a model's behavior when you add it
           inside the model is called a steering vector.
       - id: objects
         text: >
-          These two lines are the whole idea: the first builds a steering vector, the second adds it. By the
-          end of this video, every symbol here will be defined from scratch, each with a worked example.
+          These two lines are the whole idea: the first builds a steering vector, the second adds it. The
+          small line below is the model they act on. By the end of this video, every symbol here will be defined from scratch, each with a worked example.
 
   - id: ch01
     title: "1 · Numbers and vectors"
@@ -86,12 +87,13 @@ chapters:
           bars around a set mean its size. GPT-2's vocabulary has {vocab} tokens.
       - id: example
         text: >
-          Our prompt becomes these tokens. GPT-2 also starts every text with a special end-of-text token.
+          Our prompt becomes these tokens. Like the library the original experiment used, we start every text
+          with GPT-2's special end-of-text token; GPT-2's own tokenizer does not add it.
           A token's place in the sequence is its position, t, counting from zero.
       - id: embedding
         text: >
-          An embedding is a function from tokens to vectors: it looks up a learned vector in R d for each
-          token and adds another for its position. In a toy, three-token vocabulary, "love" might map to
+          An embedding is a function from a token and its position to a vector: it looks up a learned vector
+          in R d for the token and adds another learned vector for its position. In a toy, three-token vocabulary, "love" might map to
           one, zero. Now the text is a sequence of vectors, one per position.
 
   - id: ch04
@@ -104,12 +106,13 @@ chapters:
       - id: parts
         text: >
           Each layer has two parts, both functions. Attention lets every position gather information from
-          earlier positions; the MLP, a multilayer perceptron, transforms each position's vector on its own.
+          itself and earlier positions; the MLP, a multilayer perceptron, transforms each position's vector on its own.
       - id: residual
         text: >
-          Both add their outputs onto a running vector at every position: the residual stream. Leaving out
-          a rescaling step called normalization, h sub ell plus one is h sub ell, plus attention's output,
-          plus the MLP's output. As Elhage and colleagues put it, the residual stream
+          Both add their outputs onto a running vector at every position: the residual stream. h sub ell
+          plus one is h sub ell, plus attention's output, plus the output of the MLP, which reads the stream
+          after attention. Each part first rescales what it reads, a step called normalization, but its
+          output is simply added. As Elhage and colleagues put it, the residual stream
           is simply the sum of the output of all the previous layers and the original embedding.
       - id: toy
         text: >
@@ -119,7 +122,7 @@ chapters:
         text: >
           h sub ell, superscript t, is the residual stream entering layer ell at position t. Numbers computed
           inside a model like this are activations; one run through all layers is a forward pass. In GPT-2 XL,
-          the stream entering layer 6 at "hate" has norm {h_norm_hate}.
+          the stream entering layer {layer} at "hate" has norm {h_norm_hate}.
 
   - id: ch05
     title: "5 · From vectors back to words"
@@ -131,7 +134,7 @@ chapters:
       - id: logits
         text: >
           The unembedding matrix, W sub U, has one row per vocabulary token. Times the final residual
-          stream, it gives one score per token, called a logit.
+          stream, after one last normalization, it gives one score per token, called a logit.
       - id: softmax
         text: >
           Softmax turns logits into probabilities: raise e to each logit, then divide by the total. Logits
@@ -139,7 +142,8 @@ chapters:
       - id: sampling
         text: >
           The model then samples: it picks the next token at random with those probabilities, appends it,
-          and repeats. After our prompt, GPT-2 XL's most likely next token is "{top1_token}", with probability
+          and repeats. Our runs use the original experiment's settings, which sample only among the most
+          likely tokens and discourage repeats. After our prompt, GPT-2 XL's most likely next token is "{top1_token}", with probability
           {top1_prob}.
 
   - id: ch06
@@ -175,13 +179,15 @@ chapters:
           into two tokens, so "Love" is padded with a space.
       - id: dataset
         text: >
-          One pair is noisy. CAA, Contrastive Activation Addition, by Rimsky and colleagues, uses a dataset D
-          of triples: a prompt p, a completion c plus showing the behavior, and c minus showing its opposite.
-          a sub ell of p and c is the residual stream at layer ell at the completion's last token.
+          One pair is noisy. CAA, Contrastive Activation Addition, by Rimsky and colleagues, averages hundreds
+          of pairs to reduce that noise. It uses a dataset D of triples: a prompt p, a completion c plus
+          showing the behavior, and c minus showing its opposite. a sub ell of p and c is the residual stream
+          at layer ell, at the position of c's answer letter.
       - id: formula
         text: >
           So: take each triple's difference of activations, add them up with sigma, and multiply by one over
-          the size of D. A mean difference. ActAdd is the case where D holds one pair.
+          the size of D. A mean difference. <bookmark mark='actadd'/>ActAdd is like the case where D holds one
+          pair, but it has no completions and keeps one difference per position.
       - id: toy
         text: >
           Toy example: differences two point one, zero point three; one point eight, minus zero point five;
@@ -189,9 +195,9 @@ chapters:
           unrelated component cancels.
       - id: real
         text: >
-          In GPT-2 XL at layer 6, the "Love" and "Hate" activations have norms of about {h_plus_norm} and
-          {h_minus_norm}, and cosine similarity, the dot product of their unit vectors, of {cos}. Their
-          difference has norm {hA_norm}. At position zero both share the end-of-text token, so the difference
+          In GPT-2 XL at layer {layer}, look at position one: the "Love" token and "H", the first token of
+          "Hate", have norms of about {h_plus_norm} and {h_minus_norm}, and cosine similarity, the dot product
+          of their unit vectors, of {cos}. Their difference there has norm {hA_norm}. At position zero both share the end-of-text token, so the difference
           there is exactly zero.
 
   - id: ch08
@@ -205,44 +211,46 @@ chapters:
           paper's words, these vectors act like virtual bias terms.
       - id: positions
         text: >
-          T is the set of edited positions. ActAdd adds h A at the first positions of the prompt. CAA adds
-          its vector at all token positions after the user's prompt.
+          T is the set of edited positions. ActAdd adds row t of h A at each front position t of the prompt,
+          a different vector at each position. CAA adds its single vector at all token positions after the
+          user's prompt.
       - id: toy
         text: >
-          Toy example: h is one, one; v is two, zero; alpha is one and a half; so h tilde is four, one. With
+          Toy example, treating h as the final stream: h is one, one; v is two, zero; alpha is one and a half; so h tilde is four, one. With
           unembedding rows one, zero for "love", minus one, zero for "hate", and zero, one for "the", the
           logits go from one, minus one, one to four, minus four, one, and after softmax "love" rises from
           {toy_love_before} to {toy_love_after}.
       - id: real
         text: >
-          Now GPT-2 XL with the original settings: "Love" minus "Hate", before layer 6, coefficient plus
-          five. Next-token probabilities shift; "{gain1}" gains most. <bookmark mark='cont'/>Then the first
-          sampled continuations, same random choices, not cherry-picked; <bookmark mark='note'/>the original
-          blog post's examples were the best of three.
+          Now GPT-2 XL with the original settings: "Love" minus "Hate", before layer {layer}, coefficient plus
+          {coeff}. Next-token probabilities shift; "{gain1}" gains most. <bookmark mark='cont'/>Then the first
+          sampled continuations, from seed zero, not cherry-picked; <bookmark mark='note'/>the original blog
+          post's demonstrations were the best of three.
 
   - id: ch09
     title: "9 · Does it really work?"
     beats:
       - id: question
         text: >
-          One example proves little, so we tested it, writing down our hypotheses and analysis before
-          collecting any data. {design_sentence}
+          One example proves little, so we tested it, writing down each run's hypotheses and analysis before
+          collecting its data. {design_sentence}
       - id: control
         text: >
           A control is a comparison condition identical except for the thing being tested. Ours adds random
           directions with the same norm as the steering vector.
       - id: metric
         text: >
-          A sentiment classifier, a separate model trained to judge how positive a text is, scored each
-          continuation from zero to one.
+          A sentiment classifier, a separate model trained to judge whether a text is positive, gave each
+          continuation the probability, from zero to one, that it is positive.
       - id: result
         text: >
           {result_sentence} Error bars are 95 percent confidence intervals from the bootstrap: resample the
           prompts ten thousand times and keep the middle 95 percent of the averages. {verdict_sentence} <bookmark mark='ph'/>{posthoc_sentence}
       - id: cost
         text: >
-          The price: negative log-likelihood, how surprised the unsteered model is by each continuation per
-          token, where higher means less natural text. {cost_sentence}
+          The price: negative log-likelihood, how surprised the unsteered model is by each continuation, in
+          nats per token, which are natural-log units. Higher means text the unsteered model finds less
+          likely, a rough sign of less fluent text. {cost_sentence}
 
   - id: ch10
     title: "10 · Nuances and relatives"
@@ -250,9 +258,12 @@ chapters:
       - id: limits
         text: >
           Steering has limits. <bookmark mark='coeff'/>The injection coefficient cannot be increased indefinitely.
-          <bookmark mark='middle'/>Middle layers tend to work best. <bookmark mark='api'/>It needs access to the
+          <bookmark mark='middle'/>Middle layers are often most effective, <bookmark mark='layer'/>but it
+          depends on the concept: in GPT-2 XL, Love works best at layer 6, the more abstract Conspiracy at
+          layer 23. <bookmark mark='api'/>It needs access to the
           model's internals: ActAdd is not immediately applicable given only API access to a model. <bookmark mark='tan'/>And
-          Tan and colleagues found that steerability is highly variable across different inputs; <bookmark mark='anti'/>for
+          Tan and colleagues found that steerability is highly variable across different inputs, even inputs
+          like the ones a vector was built from; <bookmark mark='anti'/>for
           some, steering even has the opposite effect.
       - id: relatives
         text: >

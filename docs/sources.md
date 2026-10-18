@@ -169,6 +169,20 @@ Link: https://www.jstor.org/stable/4615733
 License: citation only
 
 
+## Lones 2021
+
+Lones, M. A. (2021). How to avoid machine learning pitfalls: a guide for academic researchers. arXiv:2108.02497.  
+Link: https://arxiv.org/abs/2108.02497  
+License: citation only
+
+
+## Nosek et al. 2018
+
+Nosek, B. A., Ebersole, C. R., DeHaven, A. C., Mellor, D. T. (2018). The preregistration revolution. PNAS 115(11), 2600-2606.  
+Link: https://doi.org/10.1073/pnas.1708274114  
+License: citation only
+
+
 ## Efron & Tibshirani 1993
 
 Efron, B., Tibshirani, R. J. (1993). An Introduction to the Bootstrap. Chapman & Hall/CRC.  

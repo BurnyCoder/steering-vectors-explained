@@ -9,10 +9,12 @@ Global context (data flow):
   analyze           bootstrap CIs, Wilcoxon+Holm, Spearman -> data/study/summary.json + figures
   preregister2      exp01 effect size -> powered N -> reports/exp02_preregistration.md (committed before data)
   replicate         N fresh prompts, primary steer(5) - steer(0) -> data/study/exp02*.json(l) + figures
+  posthoc           exploratory, NOT pre-registered: share of completions containing love/hate -> *_posthoc.json
   render            Manim chapters (edge-tts narration) -> media/videos/... (--chapters ch03 --quality l)
   inspect           one contact sheet of frames per chapter -> outputs/check/ (visual QA)
   assemble          ffmpeg concat + chapters + merged subtitles -> outputs/
   docs              data/glossary.yaml + data/sources.yaml -> docs/glossary.md, docs/sources.md
+  tables            data/study/*.json -> reports/results_tables.md (generated, never hand-typed)
   paper             reports/paper/paper.md -> reports/paper/paper.pdf (pandoc + xelatex)
 Usage: `uv run steering-explainer` (all phases) or `uv run steering-explainer --phases study analyze`.
 """
@@ -149,6 +151,12 @@ def replicate(ctx: Context) -> None:
     dose_response_figure(summary, d / "exp02_dose_response_dark.png", "dark", "experiment 02")
 
 
+def posthoc(ctx: Context) -> None:
+    from steering_explainer.study.posthoc import write_posthoc
+    write_posthoc(ctx.s)
+    log.info("Post-hoc (exploratory) lexical analysis written to data/study/*_posthoc.json")
+
+
 def render(ctx: Context) -> None:
     from steering_explainer.video.render import render_chapters
     render_chapters(ctx.s, ctx.chapters)
@@ -165,6 +173,12 @@ def docs(ctx: Context) -> None:
     log.info("Wrote docs/glossary.md and docs/sources.md")
 
 
+def tables(ctx: Context) -> None:
+    from steering_explainer.report import write_results_tables
+    write_results_tables(ctx.s)
+    log.info("Wrote reports/results_tables.md")
+
+
 def paper(ctx: Context) -> None:
     from steering_explainer.report import build_paper
     build_paper(ctx.s)
@@ -176,8 +190,8 @@ def inspect(ctx: Context) -> None:
 
 
 PHASES = {"verify_sources": verify_sources, "practical_example": practical_example, "preregister": preregister,
-          "pilot": pilot, "study": study, "analyze": analyze, "preregister2": preregister2, "replicate": replicate,
-          "render": render, "inspect": inspect, "assemble": assemble, "docs": docs, "paper": paper}
+          "pilot": pilot, "study": study, "analyze": analyze, "preregister2": preregister2, "replicate": replicate, "posthoc": posthoc,
+          "render": render, "inspect": inspect, "assemble": assemble, "docs": docs, "tables": tables, "paper": paper}
 
 
 def main(argv: list[str] | None = None) -> None:

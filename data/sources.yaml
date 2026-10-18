@@ -227,6 +227,16 @@ sources:
     citation: "Holm, S. (1979). A Simple Sequentially Rejective Multiple Test Procedure. Scandinavian Journal of Statistics 6(2), 65-70."
     url: "https://www.jstor.org/stable/4615733"
     license: "citation only"
+  - id: lones2021pitfalls
+    short: "Lones 2021"
+    citation: "Lones, M. A. (2021). How to avoid machine learning pitfalls: a guide for academic researchers. arXiv:2108.02497."
+    url: "https://arxiv.org/abs/2108.02497"
+    license: "citation only"
+  - id: nosek2018prereg
+    short: "Nosek et al. 2018"
+    citation: "Nosek, B. A., Ebersole, C. R., DeHaven, A. C., Mellor, D. T. (2018). The preregistration revolution. PNAS 115(11), 2600-2606."
+    url: "https://doi.org/10.1073/pnas.1708274114"
+    license: "citation only"
   - id: efron1993bootstrap
     short: "Efron & Tibshirani 1993"
     citation: "Efron, B., Tibshirani, R. J. (1993). An Introduction to the Bootstrap. Chapman & Hall/CRC."

@@ -1,0 +1,192 @@
+{
+  "model": {
+    "name": "gpt2-xl",
+    "n_layers": 48,
+    "d_model": 1600,
+    "d_vocab": 50257,
+    "n_params": 1557611200,
+    "dtype": "float16"
+  },
+  "layer": 6,
+  "coeff": 5.0,
+  "prompt_plus": "Love",
+  "prompt_minus": "Hate",
+  "tokens_plus": [
+    "<|endoftext|>",
+    "Love",
+    " "
+  ],
+  "tokens_minus": [
+    "<|endoftext|>",
+    "H",
+    "ate"
+  ],
+  "prompt": "I hate you because",
+  "tokens_prompt": [
+    "<|endoftext|>",
+    "I",
+    " hate",
+    " you",
+    " because"
+  ],
+  "token_ids_prompt": [
+    50256,
+    40,
+    5465,
+    345,
+    780
+  ],
+  "h_plus_first6": [
+    0.447,
+    1.725,
+    -1.309,
+    -2.436,
+    -0.99,
+    0.201
+  ],
+  "h_minus_first6": [
+    0.686,
+    2.449,
+    0.561,
+    0.312,
+    0.721,
+    0.572
+  ],
+  "h_A_first6": [
+    -0.239,
+    -0.725,
+    -1.869,
+    -2.747,
+    -1.711,
+    -0.372
+  ],
+  "h_A_norm_per_pos": [
+    0.0,
+    73.75,
+    78.355
+  ],
+  "h_plus_norm": 97.99,
+  "h_minus_norm": 97.47,
+  "cos_plus_minus": 0.7153,
+  "h_prompt_norm_per_pos": [
+    116.05,
+    90.22,
+    88.67,
+    71.54,
+    71.3
+  ],
+  "relative_norm_pos1": 0.817,
+  "next_token": {
+    "unsteered_top5": [
+      [
+        " you",
+        0.5923
+      ],
+      [
+        " I",
+        0.1582
+      ],
+      [
+        " of",
+        0.0468
+      ],
+      [
+        " your",
+        0.0337
+      ],
+      [
+        " the",
+        0.0108
+      ]
+    ],
+    "steered_top5": [
+      [
+        " you",
+        0.5244
+      ],
+      [
+        " I",
+        0.0786
+      ],
+      [
+        " of",
+        0.0561
+      ],
+      [
+        "\n",
+        0.0241
+      ],
+      [
+        " we",
+        0.024
+      ]
+    ],
+    "largest_gains": [
+      [
+        " they",
+        0.0186
+      ],
+      [
+        " ",
+        0.0178
+      ],
+      [
+        " we",
+        0.0164
+      ],
+      [
+        ",",
+        0.0146
+      ],
+      [
+        "\n",
+        0.0136
+      ]
+    ],
+    "largest_losses": [
+      [
+        " I",
+        -0.0796
+      ],
+      [
+        " you",
+        -0.068
+      ],
+      [
+        " your",
+        -0.0166
+      ],
+      [
+        " the",
+        -0.0026
+      ],
+      [
+        " this",
+        -0.002
+      ]
+    ]
+  },
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.3,
+    "freq_penalty": 1.0,
+    "max_new_tokens": 40
+  },
+  "completions": [
+    {
+      "seed": 0,
+      "unsteered": " you're a stupid, boring person.\n\nYou're not a real person. You don't have feelings or thoughts of your own. You don't care about anything except your own happiness and the",
+      "steered": " you're all the same.\n\nThe world is full of people who are afraid to be themselves, and love is the only way to be true.\n\nLove isn't a matter of who"
+    },
+    {
+      "seed": 1,
+      "unsteered": " you're ugly, and I'm not sure why.\n\nThe truth is that I hate your face. It's the only thing about you that doesn't look like a face, or at least",
+      "steered": " I'm not your mother.\n\nThe first time I heard that phrase, it was a punch in the gut. I was in my early twenties and still had a lot of growing up to do"
+    },
+    {
+      "seed": 2,
+      "unsteered": " you're a liar.\n\nI hate you because you don't care about me.\n\nI hate you because I'm not worthy of your love.\n\nI hate you for making me",
+      "steered": " you're not a thing, and that's okay.\n\nLove is like a drug. You take it up the ass and then you take it out again. Love is an addiction, but love"
+    }
+  ]
+}

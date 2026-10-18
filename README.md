@@ -5,8 +5,10 @@ symbol from scalars upward, uses worked examples throughout, and quotes papers v
 GPT-2-XL runs, including two pre-registered experiments**, whose measured numbers appear in the video. Every claim was
 independently fact-checked; findings, sources and fixes: [`docs/fact_check.md`](docs/fact_check.md).
 
-* **Video (MP4, 1080p30, 13:12, 12 chapters + subtitles):** download from
-  [GitHub Release v1.0](https://github.com/BurnyCoder/steering-vectors-explained/releases/tag/v1.0). Transcript/subtitles:
+* **Video (MP4, 1080p30, 14:32, 12 chapters + subtitles):** download from
+  [GitHub Release v1.1](https://github.com/BurnyCoder/steering-vectors-explained/releases/tag/v1.1), the fact-checked
+  version ([v1.0](https://github.com/BurnyCoder/steering-vectors-explained/releases/tag/v1.0) is kept for reference; its
+  errors are listed in [`docs/fact_check.md`](docs/fact_check.md)). Transcript/subtitles:
   [`outputs/steering_vectors_explained.srt`](outputs/steering_vectors_explained.srt); chapter list and all sources:
   [`outputs/description.md`](outputs/description.md).
 * **Paper (PDF):** [`reports/paper/paper.pdf`](reports/paper/paper.pdf). Author: Libor Burian, independent researcher.

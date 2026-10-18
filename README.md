@@ -4,8 +4,8 @@ A narrated, 3Blue1Brown-style animated explainer of **steering vectors in large 
 symbol from scalars upward, uses worked examples throughout, and quotes papers verbatim. It is grounded in a **real,
 pre-registered experiment on GPT-2-XL** whose measured numbers appear in the video.
 
-* **Video (MP4, 1080p, ~12.5 min, chapters + subtitles):** see the
-  [GitHub Release](https://github.com/BurnyCoder/steering-vectors-explained/releases). Transcript/subtitles:
+* **Video (MP4, 1080p30, 13:12, 12 chapters + subtitles):** download from
+  [GitHub Release v1.0](https://github.com/BurnyCoder/steering-vectors-explained/releases/tag/v1.0). Transcript/subtitles:
   [`outputs/steering_vectors_explained.srt`](outputs/steering_vectors_explained.srt); chapter list and all sources:
   [`outputs/description.md`](outputs/description.md).
 * **Paper (PDF):** [`reports/paper/paper.pdf`](reports/paper/paper.pdf). Author: Libor Burian, independent researcher.

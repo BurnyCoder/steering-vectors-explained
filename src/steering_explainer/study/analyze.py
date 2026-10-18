@@ -63,6 +63,8 @@ def analyze(s: Settings, records: Path, ref: tuple = ("random", PRIMARY_ALPHA)) 
     tests = [(f"steer_{a:g} - steer_0", pp[("steer", a)] - pp[("steer", 0.0)]) for a in alphas if a != 0]
     top = max(s.random_alphas)
     tests.append((f"steer_{top:g} - random_{top:g}", pp[("steer", top)] - pp[("random", top)]))
+    if ref != ("random", PRIMARY_ALPHA):  # exp02: exp01's primary (steer vs random at α=5) is re-tested as a secondary
+        tests.append((f"steer_{PRIMARY_ALPHA:g} - random_{PRIMARY_ALPHA:g}", pp[("steer", PRIMARY_ALPHA)] - pp[("random", PRIMARY_ALPHA)]))
     p_raw = [stats.wilcoxon_p(x) for _, x in tests]
     out["secondary"] = [{"contrast": n, **dict(zip(("mean", "lo", "hi"), _ci(x, s))), "p_raw": p, "p_holm": ph}
                         for (n, x), p, ph in zip(tests, p_raw, stats.holm(p_raw))]

@@ -40,6 +40,9 @@ uv run steering-explainer --phases render assemble                      # final 
   in the scene (edge-tts word timings make this exact).
 * **Inspect renders.** After changing a scene, render at `--quality l`, run `--phases inspect`, and look at
   the contact sheet for overlaps, clipped text and footer collisions.
+* **Log every changed claim.** When narration, on-screen text or a citation changes because a claim was wrong,
+  add a row to [`docs/fact_check.md`](docs/fact_check.md) (claim, what was wrong, fix, evidence). Attribute library
+  defaults to the library (e.g. TransformerLens' `prepend_bos`), and make each spoken sentence match the quote shown.
 * Logs: every run writes `logs/run_<timestamp>.log` with full prompts, completions and narration.
 * Steering hook changes must keep `tests/test_steering.py` green (identity at α = 0, exact α·v at the
   front positions, cached = uncached generation).

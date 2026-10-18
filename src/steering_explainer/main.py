@@ -48,7 +48,69 @@ def practical_example(ctx: Context) -> None:
     run_practical_example(ctx.s, *ctx.model_tok)
 
 
-PHASES = {"verify_sources": verify_sources, "practical_example": practical_example}
+def _study_paths(ctx: Context):
+    d = ctx.s.data_dir / "study"
+    return d / "pilot.jsonl", d / "main.jsonl", d / "power.json", d / "summary.json"
+
+
+def _prompts(ctx: Context, n_main: int):
+    from steering_explainer.study.prompts import imdb_prefixes
+    allp = imdb_prefixes(ctx.s.n_pilot + n_main, ctx.s.prompt_words)
+    return allp[: ctx.s.n_pilot], allp[ctx.s.n_pilot:]  # disjoint pilot / main sets
+
+
+def _scorer(ctx: Context):
+    from steering_explainer.study.score import SentimentScorer
+    return SentimentScorer(ctx.s.sentiment_model, ctx.s.device)
+
+
+def preregister(ctx: Context) -> None:
+    from steering_explainer.study.design import write_preregistration
+    write_preregistration(ctx.s)  # committed to git before pilot/study data exist
+    log.info("Pre-registration written to %s", ctx.s.reports_dir / "exp01_preregistration.md")
+
+
+def pilot(ctx: Context) -> None:
+    import json
+    from steering_explainer.study import stats
+    from steering_explainer.study.analyze import load_records, primary_diff
+    from steering_explainer.study.run import run_prompts
+    pilot_path, _, power_path, _ = _study_paths(ctx)
+    pilot_prompts, _ = _prompts(ctx, 0)
+    run_prompts(ctx.s, *ctx.model_tok, _scorer(ctx), pilot_prompts, pilot_path)
+    d = primary_diff(load_records(pilot_path))
+    dz = stats.cohens_dz(d)
+    n_req = stats.required_n(dz) if dz != float("inf") else ctx.s.n_min
+    n = int(min(max(n_req, ctx.s.n_min), ctx.s.n_max))
+    power = {"pilot_n": len(d), "pilot_mean_diff": float(d.mean()), "pilot_dz": dz, "required_n_80pct": n_req, "chosen_n": n}
+    power_path.write_text(json.dumps(power, indent=2), encoding="utf-8")
+    log.info("Power analysis: %s", power)
+
+
+def study(ctx: Context) -> None:
+    import json
+    from steering_explainer.study.run import run_prompts
+    _, main_path, power_path, _ = _study_paths(ctx)
+    n = json.loads(power_path.read_text(encoding="utf-8"))["chosen_n"]
+    _, main_prompts = _prompts(ctx, n)
+    log.info("Main study on %d fresh prompts", len(main_prompts))
+    run_prompts(ctx.s, *ctx.model_tok, _scorer(ctx), main_prompts, main_path)
+
+
+def analyze(ctx: Context) -> None:
+    import json
+    from steering_explainer.study.analyze import analyze as run_analysis, write_summary
+    from steering_explainer.study.plots import dose_response_figure
+    _, main_path, _, summary_path = _study_paths(ctx)
+    summary = run_analysis(ctx.s, main_path)
+    write_summary(summary, summary_path)
+    log.info("Study summary:\n%s", json.dumps(summary, indent=2, ensure_ascii=False))
+    dose_response_figure(summary, ctx.s.reports_dir / "figures" / "exp01_dose_response.png", "light")
+    dose_response_figure(summary, ctx.s.data_dir / "study" / "dose_response_dark.png", "dark")
+
+
+PHASES = {"verify_sources": verify_sources, "practical_example": practical_example, "preregister": preregister,
+          "pilot": pilot, "study": study, "analyze": analyze}
 
 
 def main(argv: list[str] | None = None) -> None:

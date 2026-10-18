@@ -1,0 +1,58 @@
+# pyproject.toml — project metadata, dependencies and tool config for uv.
+# Global context: one uv-managed package (src layout) that (1) runs a real GPT-2-XL steering
+# experiment and (2) renders a narrated Manim explainer video from its results.
+# uv project docs: https://docs.astral.sh/uv/concepts/projects/
+[project]
+name = "steering-explainer"
+version = "0.1.0"
+description = "Narrated Manim explainer of LLM steering vectors, grounded in a real GPT-2-XL activation-addition study."
+readme = "README.md"
+authors = [
+    { name = "Libor Burian", email = "burian.lib@gmail.com" }
+]
+# Pinned below 3.13 because manim-voiceover 0.4.0 lists 3.11-3.13 and torch cu128 wheels are
+# safest on 3.12 (https://pypi.org/project/manim-voiceover/).
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "datasets>=5.1.0",
+    "edge-tts>=7.3.1",
+    "manim>=0.22.0",
+    "manim-voiceover>=0.4.0",
+    "matplotlib>=3.11.2",
+    "pypdf>=6.21.1",
+    "python-dotenv>=1.2.4",
+    "pyyaml>=6.0.3",
+    "requests>=2.34.2",
+    "scipy>=1.18.1",
+    "statsmodels>=0.15.0",
+    "torch>=2.11.0",
+    "transformers>=5.20.1",
+]
+
+[project.scripts]
+# `uv run steering-explainer` runs the full pipeline wrapper (src/steering_explainer/main.py).
+steering-explainer = "steering_explainer.main:main"
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"
+
+# PyTorch CUDA 12.8 wheels are required for Blackwell GPUs (RTX 50xx, sm_120).
+# Pattern copied from the uv PyTorch guide: https://docs.astral.sh/uv/guides/integration/pytorch/
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu128", marker = "sys_platform == 'linux' or sys_platform == 'win32'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.pytest.ini_options]
+# Tests live in tests/; markers let slow GPU tests be skipped with `-m "not gpu"`.
+testpaths = ["tests"]
+markers = ["gpu: needs GPT-2 weights and is slower", "network: needs internet"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]

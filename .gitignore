@@ -1,0 +1,21 @@
+# .gitignore — keep secrets, caches, heavy renders and logs out of git.
+# Python bytecode / build artefacts
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+# uv virtual environment
+.venv
+# local config (may hold machine paths); .env.example is the committed template
+.env
+# Hugging Face model cache, downloaded source texts, pytest cache
+.cache/
+data/cache/
+.pytest_cache/
+# Manim render tree (partial movies, TeX cache, voiceover mp3s) and final videos (shipped as a GitHub Release)
+media/
+outputs/*.mp4
+# timestamped run logs
+logs/

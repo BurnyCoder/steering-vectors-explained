@@ -26,17 +26,17 @@ def per_prompt(df: pd.DataFrame, metric: str) -> pd.DataFrame:
     return df.groupby(["prompt_idx", "kind", "alpha"])[metric].mean().unstack(["kind", "alpha"])
 
 
-def primary_diff(df: pd.DataFrame) -> np.ndarray:
-    """Per-prompt P_pos(steer, α=5) − P_pos(random, α=5): the pre-registered primary contrast."""
+def primary_diff(df: pd.DataFrame, ref: tuple = ("random", PRIMARY_ALPHA)) -> np.ndarray:
+    """Per-prompt P_pos(steer, α=5) − P_pos(ref): exp01 ref = random(5), exp02 ref = steer(0)."""
     t = per_prompt(df, "p_pos")
-    return (t[("steer", PRIMARY_ALPHA)] - t[("random", PRIMARY_ALPHA)]).to_numpy()
+    return (t[("steer", PRIMARY_ALPHA)] - t[ref]).to_numpy()
 
 
 def _ci(x, s: Settings) -> list[float]:
     return list(stats.paired_bootstrap_ci(x, s.bootstrap_resamples, seed=0))
 
 
-def analyze(s: Settings, records: Path) -> dict:
+def analyze(s: Settings, records: Path, ref: tuple = ("random", PRIMARY_ALPHA)) -> dict:
     df = load_records(records)
     pp, nll = per_prompt(df, "p_pos"), per_prompt(df, "nll")
     out = {"n_prompts": int(pp.shape[0]), "n_completions": int(len(df)), "seeds": list(s.seeds)}
@@ -46,9 +46,9 @@ def analyze(s: Settings, records: Path) -> dict:
                     for m, tab in (("p_pos", pp), ("nll", nll))}
 
     # H1 primary
-    d = primary_diff(df)
+    d = primary_diff(df, ref)
     m, lo, hi = _ci(d, s)
-    out["primary"] = {"contrast": "P_pos(steer,5) - P_pos(random,5)", "mean": m, "lo": lo, "hi": hi,
+    out["primary"] = {"contrast": f"P_pos(steer,5) - P_pos({ref[0]},{ref[1]:g})", "mean": m, "lo": lo, "hi": hi,
                       "dz": stats.cohens_dz(d), "verdict": "supported" if lo > 0 else "falsified"}
 
     # H2 dose-response: per-prompt Spearman over the steered α grid
@@ -75,7 +75,7 @@ def analyze(s: Settings, records: Path) -> dict:
                       for (k, a) in nll.columns if not (k == "steer" and a == 0)}
 
     # robustness: primary contrast per seed
-    out["primary_per_seed"] = {int(sd): dict(zip(("mean", "lo", "hi"), _ci(primary_diff(g), s)))
+    out["primary_per_seed"] = {int(sd): dict(zip(("mean", "lo", "hi"), _ci(primary_diff(g, ref), s)))
                                for sd, g in df.groupby("seed")}
 
     # non-cherry-picked examples: the first three prompts, seed 0, α = 0 vs α = 5

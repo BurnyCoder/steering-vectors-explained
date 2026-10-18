@@ -90,7 +90,32 @@ t-test approximation, statsmodels TTestPower), clipped to [{s.n_min}, {s.n_max}]
 """
 
 
-def write_preregistration(s: Settings) -> None:
-    path = s.reports_dir / "exp01_preregistration.md"
+def exp02_preregistration_markdown(s: Settings, n: int, dz: float, n_offset: int) -> str:
+    """Confirmatory replication: is α = 5 better than *no* steering? (exp01 left this underpowered)."""
+    return f"""# Experiment 02 — Pre-registration: powered replication, steered vs. unsteered
+
+*Written and committed after experiment 01 and before any experiment-02 data. Author: Libor Burian (independent researcher).*
+
+## Why
+Experiment 01 (N = 30) supported H1 (steered beats same-norm random directions at α = 5), but the contrast
+steered(α = 5) − unsteered(α = 0) was small and not significant: d_z = {dz:.3f}. That contrast is the one a user of
+steering cares about, so this experiment powers it.
+
+## Primary hypothesis and falsification
+* **H1′:** P_pos(steer, α = 5) > P_pos(steer, α = 0).
+* **Falsified** if the 95% paired-bootstrap CI of the per-prompt mean difference includes 0 or lies below 0.
+
+## Design (identical to experiment 01 except where stated)
+* Same model, vector, layer, conditions (α ∈ {list(s.alphas)}, random controls at {list(s.random_alphas)}, R = {s.n_random}),
+  sampling settings, seeds {list(s.seeds)}, metrics and secondary analyses (exp01 H1-H4 re-tested, Holm-corrected).
+* **N = {n}** fresh prompts: required n for 80% power at two-sided α = 0.05 for d_z = {dz:.3f} (statsmodels TTestPower),
+  capped at {s.n_max}. Prompts are IMDb test prefixes number {n_offset}…{n_offset + n - 1} of the same seeded,
+  alternating list, i.e. disjoint from the pilot and from experiment 01.
+* Anything not listed here is reported as **post-hoc**.
+"""
+
+
+def write_preregistration(s: Settings, name: str = "exp01", text: str = "") -> None:
+    path = s.reports_dir / f"{name}_preregistration.md"
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(preregistration_markdown(s), encoding="utf-8")
+    path.write_text(text or preregistration_markdown(s), encoding="utf-8")

@@ -7,13 +7,16 @@ Global context (data flow):
   pilot             20 pilot prompts -> effect size -> power analysis -> data/study/power.json
   study             N fresh prompts × conditions × seeds -> data/study/completions.jsonl (+ scores)
   analyze           bootstrap CIs, Wilcoxon+Holm, Spearman -> data/study/summary.json + figures
-  render            Manim chapters (edge-tts narration) -> media/videos/...
+  preregister2      exp01 effect size -> powered N -> reports/exp02_preregistration.md (committed before data)
+  replicate         N fresh prompts, primary steer(5) - steer(0) -> data/study/exp02*.json(l) + figures
+  render            Manim chapters (edge-tts narration) -> media/videos/... (--chapters ch03 --quality l)
   assemble          ffmpeg concat + chapters + merged subtitles -> outputs/
   paper             reports/paper/paper.md -> reports/paper/paper.pdf (pandoc + xelatex)
 Usage: `uv run steering-explainer` (all phases) or `uv run steering-explainer --phases study analyze`.
 """
 
 import argparse
+import os
 from functools import cached_property
 
 from steering_explainer.config import Settings, load_settings
@@ -109,18 +112,74 @@ def analyze(ctx: Context) -> None:
     dose_response_figure(summary, ctx.s.data_dir / "study" / "dose_response_dark.png", "dark")
 
 
+def _exp02_n(ctx: Context) -> tuple[int, float, int]:
+    """(N, d_z, prompt offset) for experiment 02, derived from experiment 01's steer(5) − steer(0) effect."""
+    import json
+    from steering_explainer.study import stats
+    from steering_explainer.study.analyze import load_records, primary_diff
+    _, main_path, power_path, _ = _study_paths(ctx)
+    dz = stats.cohens_dz(primary_diff(load_records(main_path), ("steer", 0.0)))
+    n1 = json.loads(power_path.read_text(encoding="utf-8"))["chosen_n"]
+    return int(min(stats.required_n(dz), ctx.s.n_max)), dz, ctx.s.n_pilot + n1
+
+
+def preregister2(ctx: Context) -> None:
+    from steering_explainer.study.design import exp02_preregistration_markdown, write_preregistration
+    n, dz, off = _exp02_n(ctx)
+    write_preregistration(ctx.s, "exp02", exp02_preregistration_markdown(ctx.s, n, dz, off))
+    log.info("Experiment 02 pre-registered: N=%d (d_z=%.3f), prompts from index %d", n, dz, off)
+
+
+def replicate(ctx: Context) -> None:
+    import json
+    from steering_explainer.study.analyze import analyze as run_analysis, write_summary
+    from steering_explainer.study.plots import dose_response_figure
+    from steering_explainer.study.prompts import imdb_prefixes
+    from steering_explainer.study.run import run_prompts
+    n, _, off = _exp02_n(ctx)
+    d = ctx.s.data_dir / "study"
+    prompts = imdb_prefixes(off + n, ctx.s.prompt_words)[off:]  # fresh, disjoint from pilot and exp01
+    run_prompts(ctx.s, *ctx.model_tok, _scorer(ctx), prompts, d / "exp02.jsonl")
+    summary = run_analysis(ctx.s, d / "exp02.jsonl", ref=("steer", 0.0))
+    write_summary(summary, d / "exp02_summary.json")
+    log.info("Experiment 02 summary:\n%s", json.dumps(summary, indent=2, ensure_ascii=False))
+    dose_response_figure(summary, ctx.s.reports_dir / "figures" / "exp02_dose_response.png", "light", "experiment 02")
+    dose_response_figure(summary, d / "exp02_dose_response_dark.png", "dark", "experiment 02")
+
+
+def render(ctx: Context) -> None:
+    from steering_explainer.video.render import render_chapters
+    render_chapters(ctx.s, ctx.chapters)
+
+
+def assemble(ctx: Context) -> None:
+    from steering_explainer.video.render import assemble as run_assemble
+    run_assemble(ctx.s)
+
+
+def inspect(ctx: Context) -> None:
+    from steering_explainer.video.render import contact_sheets
+    log.info("Contact sheets: %s", contact_sheets(ctx.s))
+
+
 PHASES = {"verify_sources": verify_sources, "practical_example": practical_example, "preregister": preregister,
-          "pilot": pilot, "study": study, "analyze": analyze}
+          "pilot": pilot, "study": study, "analyze": analyze, "preregister2": preregister2, "replicate": replicate,
+          "render": render, "inspect": inspect, "assemble": assemble}
 
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--phases", nargs="+", choices=list(PHASES), default=list(PHASES), help="phases to run, in order")
+    parser.add_argument("--chapters", nargs="*", default=None, help="render only these chapter ids, e.g. ch03 ch07")
+    parser.add_argument("--quality", choices=["l", "m", "h", "k"], default=None, help="override RENDER_QUALITY")
     args = parser.parse_args(argv)
+    if args.quality:
+        os.environ["RENDER_QUALITY"] = args.quality  # load_settings never overrides an already-set variable
     settings = load_settings()  # .env -> Settings (also sets PATH/HF_HOME)
     log_path = setup_logging(settings.root / "logs")
     log.info("Run started; log file %s; phases %s; settings %s", log_path, args.phases, settings)
     ctx = Context(settings)
+    ctx.chapters = args.chapters
     for name in args.phases:
         log.info("===== PHASE %s =====", name)
         PHASES[name](ctx)

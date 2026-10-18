@@ -29,18 +29,19 @@ def _series(means: dict, kind: str):
     return xs, ys, [v[0] - v[1] for _, v in pts], [v[2] - v[0] for _, v in pts]
 
 
-def dose_response_figure(summary: dict, path: Path, theme: str = "light") -> None:
+def dose_response_figure(summary: dict, path: Path, theme: str = "light", title: str = "") -> None:
     t = THEMES[theme]
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.6), facecolor=t["bg"])
     panels = [("p_pos", "P(positive) of completion", (0, 1)), ("nll", "Completion NLL (nats/token)", None)]
     for ax, (metric, ylabel, ylim) in zip(axes, panels):
         ax.set_facecolor(t["bg"])
         m = summary["means"][metric]
-        for kind, color, label, ls in (("steer", t["steer"], '"Love" − "Hate" vector', "-"),
-                                       ("random", t["rand"], "random direction, same norm", "none")):
+        for kind, color, label, ls, dodge in (("steer", t["steer"], '"Love" − "Hate" vector', "-", 0.0),
+                                              ("random", t["rand"], "random direction, same norm (mean of 5)", "none", 0.6)):
             xs, ys, lo, hi = _series(m, kind)
-            ax.errorbar(xs, ys, yerr=[lo, hi], color=color, lw=2, ls=ls, marker="o", ms=8, capsize=4,
-                        mec=t["bg"], mew=2, label=label, zorder=3)
+            ax.errorbar([x + dodge for x in xs], ys, yerr=[lo, hi], color=color, lw=2, ls=ls, marker="o", ms=8,
+                        capsize=4, mec=t["bg"], mew=2, label=label, zorder=3)  # dodge: controls never hide behind steered points
+        ax.set_xticks(_series(m, "steer")[0])  # ticks exactly at the tested α values
         base = m["steer_0"][0]
         ax.axhline(base, color=t["base"], lw=1, ls="--", zorder=1)  # unsteered (α = 0) reference
         ax.annotate("unsteered (α = 0)", xy=(1, base), xycoords=("axes fraction", "data"), xytext=(-4, 4),
@@ -57,9 +58,9 @@ def dose_response_figure(summary: dict, path: Path, theme: str = "light") -> Non
             ax.spines[side].set_visible(False)
         for side in ("left", "bottom"):
             ax.spines[side].set_color(t["grid"])
-    axes[0].legend(loc="upper left", frameon=False, labelcolor=t["fg"])
-    fig.suptitle(f"GPT-2-XL, layer 6 · mean over {summary['n_prompts']} prompts × {len(summary['seeds'])} seeds · bars: 95% bootstrap CI",
-                 color=t["fg2"], fontsize=10)
+    axes[0].legend(loc="lower left", frameon=False, labelcolor=t["fg"])
+    fig.suptitle(f"GPT-2-XL, layer 6 · mean over {summary['n_prompts']} prompts × {len(summary['seeds'])} seeds · bars: 95% bootstrap CI"
+                 + (f" · {title}" if title else ""), color=t["fg2"], fontsize=10)
     fig.tight_layout()
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(path, dpi=200, facecolor=t["bg"])

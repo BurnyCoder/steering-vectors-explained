@@ -34,7 +34,8 @@ More detail:
 * **The dose-response rises and then falls.** Mean positivity peaks at α = 10 (0.833) and declines at
   α = 15 (0.774). So H2's rank correlation holds on average, but the relation is not monotone at the top.
 * **Each seed alone** excludes 0 for the primary contrast: +0.146, +0.116, +0.177.
-* **Fluency cost grows with |α|** and exceeds the random control at equal norm:
+* **Fluency cost grows with |α|** and exceeds the random control at equal norm at α = 15; at α = 5 the two are
+  about equal (overlapping CIs):
   * α = 15: +1.38 nats/token (random: +0.74);
   * α = 5: +0.37 (random: +0.36).
 
@@ -60,7 +61,8 @@ e.g. sentiment of completions with the steering words masked.
 ## Learnings
 * Powering the contrast you care about changes the conclusion: "not significant" at N = 30 became
   +0.146 [0.102, 0.192] at N = 190.
-* A sign flip is not guaranteed to reverse an effect. −α·v is not "anti-love", it is "+Hate token identity".
+* A sign flip is not guaranteed to reverse an effect. −α·v is not "anti-love": it adds the "Hate" activations minus the "Love" ones, and (post-hoc) mostly injects the
+  word "hate".
   This matches Tan et al. (2024): steerability is input- and concept-dependent and can even reverse.
 * The metric's validity limits the claim. A binary sentiment classifier cannot separate "positive" from
   "mentions love" or from "incoherent".

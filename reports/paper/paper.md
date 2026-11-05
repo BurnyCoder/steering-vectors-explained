@@ -33,7 +33,7 @@ where $a_\ell(p,c)\in\mathbb{R}^d$ is the residual stream at layer $\ell$ at the
 * **Mechanical guarantees:**
   * **Quotes.** All 40 quotations (28 of them shown on screen) live in one registry and are checked as verbatim substrings, after whitespace and typography normalisation, of each source's downloaded HTML or PDF. Quotes from sources not licensed CC BY 4.0 are limited to 15 words.
   * **Numbers.** Toy numbers come from exact rational arithmetic, and real numbers from JSON files written by the experiment code. Unit tests pin both.
-  * **Definition order.** A glossary maps 51 terms to their defining chapter, and a test fails if any earlier chapter's narration uses one.
+  * **Definition order.** A glossary maps 54 terms to their defining chapter, and a test fails if any earlier chapter's narration uses one.
 * **Visual QA.** Contact sheets of rendered frames are inspected for overlaps and clipping.
 
 ## Steering implementation
@@ -139,8 +139,8 @@ Under pre-registration with norm-matched controls, the ActAdd "Love" − "Hate" 
 - Arditi, A. et al. (2024). Refusal in Language Models Is Mediated by a Single Direction. NeurIPS 2024.
 - Templeton, A. et al. (2024). Scaling Monosemanticity. Transformer Circuits Thread.
 - Chen, R. et al. (2025). Persona Vectors. arXiv:2507.21509.
-- Tan, D. et al. (2024). Analyzing the Generalization and Reliability of Steering Vectors. NeurIPS 2024.
-- Park, K., Choe, Y. J., Veitch, V. (2024). The Linear Representation Hypothesis and the Geometry of LLMs. ICML 2024.
+- Tan, D. et al. (2024). Analysing the Generalisation and Reliability of Steering Vectors. NeurIPS 2024. arXiv:2407.12404 (arXiv title: 'Analyzing the Generalization and Reliability of Steering Vectors').
+- Park, K., Choe, Y. J., Veitch, V. (2024). The Linear Representation Hypothesis and the Geometry of Large Language Models. ICML 2024.
 - Elhage, N. et al. (2021). A Mathematical Framework for Transformer Circuits.
 - Radford, A. et al. (2019). Language Models are Unsupervised Multitask Learners.
 - Maas, A. L. et al. (2011). Learning Word Vectors for Sentiment Analysis. ACL.

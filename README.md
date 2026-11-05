@@ -44,7 +44,7 @@ The 12 chapters (structure: [`docs/storyboard.md`](docs/storyboard.md)) cover:
 * **No hand-typed numbers.** Toy examples are computed by [`video/toy.py`](src/steering_explainer/video/toy.py)
   in exact arithmetic (pinned by tests). Real numbers come from JSON written by the experiment code. Narration
   numbers are `{placeholders}` filled from those files.
-* **Define before use.** [`data/glossary.yaml`](data/glossary.yaml) maps 51 terms to the chapter that defines
+* **Define before use.** [`data/glossary.yaml`](data/glossary.yaml) maps 54 terms to the chapter that defines
   them, and [`tests/test_script.py`](tests/test_script.py) fails if narration uses a term earlier.
 * **Visual QA.** Every chapter is rendered, turned into a contact sheet of frames (`--phases inspect`), and
   checked for clipped or overlapping elements.

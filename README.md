@@ -76,10 +76,12 @@ The 12 chapters (structure: [`docs/storyboard.md`](docs/storyboard.md)) cover:
 | 02 | α = −5 vs. 0 = +0.052 [−0.000, +0.105] | negation does **not** reverse the effect |
 | 02 | NLL cost at α = 15: +1.38 nats/token (random: +0.74) | steering hurts fluency |
 
-* Mean positivity is highest at α = 10 and lower at α = 15 (descriptive). The pre-registered dose-response test
+* In experiment 02, mean positivity is highest at α = 10 and lower at α = 15 (descriptive; in experiment 01 it
+  peaks at α = 5). The pre-registered dose-response test
   (H2, per-prompt Spearman ρ) failed in experiment 01 and held in experiment 02.
-* A **post-hoc** (exploratory) analysis suggests the vector injects the words more than the sentiment. The whole word
-  "love" appears in 61.4% of α = 5 continuations versus 5.6% unsteered; "hate" appears in 22.5% at α = −5 versus 0.4%.
+* A **post-hoc** (exploratory) analysis suggests the vector injects the words more than the sentiment. In experiment 02, a
+  whole-word form of "love" (love, loves, loved, loving, lover(s)) appears in 61.4% of α = 5 continuations versus 5.6%
+  unsteered; a form of "hate" (hate(s/d), hating, hatred, hateful) appears in 22.5% at α = −5 versus 0.4%.
   The α = −5 continuations that contain "hate" average P(positive) 0.665, the same as unsteered text (0.665).
 
 All tables are generated: [`reports/results_tables.md`](reports/results_tables.md). Reports:
@@ -211,7 +213,7 @@ Module responsibilities and invariants: [`docs/architecture.md`](docs/architectu
   sampler.
 * **Study:** Hugging Face datasets (IMDb), SiEBERT classifier, scipy / statsmodels (bootstrap, Wilcoxon, Holm,
   power), matplotlib.
-* **Grounding:** requests + BeautifulSoup + pypdf (quote verification); pytest (20 non-GPU tests incl. 1 network test, + 8 GPU tests);
+* **Grounding:** requests + BeautifulSoup + pypdf (quote verification); pytest (47 non-GPU test cases incl. 1 network test, + 8 GPU tests);
   Pandoc + XeLaTeX (paper).
 
 ## Limitations

@@ -47,8 +47,8 @@ Further results:
 * **Steered vs. unsteered at α = 5:** +0.056 [−0.042, +0.155], Holm p = 0.22, not significant.
 * **Part of the H1 gap comes from the control:** random directions *lowered* positivity
   (0.685 vs. 0.754 at α = 0).
-* **Seed robustness:** each seed's CI of the primary contrast barely touches 0 (seeds 0 and 2) or barely
-  excludes it (seed 1). The pooled estimate is driven by all three seeds together.
+* **Seed robustness:** each seed's CI of the primary contrast includes 0 (seeds 0 and 2, lower bounds −0.005
+  and −0.041) or barely excludes it (seed 1, lower bound +0.001). The pooled estimate is driven by all three seeds together.
 
 ![Experiment 01 dose-response](figures/exp01_dose_response.png)
 

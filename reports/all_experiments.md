@@ -75,11 +75,13 @@ Details: [exp01_love_hate_dose_response.md](exp01_love_hate_dose_response.md),
    * The pre-registered H2 was never spoken; every pre-registered hypothesis is now voiced.
 
 ## Overall conclusions (with confidence)
-* **High confidence** (pre-registered, replicated, per-seed robust): on GPT-2-XL, adding the ActAdd
+* **High confidence** (pre-registered; the random-direction contrast replicated in experiment 02; per-seed robust
+  in experiment 02 only, since two of experiment 01's three per-seed CIs include 0): on GPT-2-XL, adding the ActAdd
   "Love" − "Hate" vector at layer 6 with α = 5 raises the SiEBERT-positivity of continuations of movie-review
-  openings by about 0.13-0.15 (absolute probability), relative to both no steering and equal-norm random
-  directions.
-* **High confidence:** steering costs fluency, and more so than random pushes of equal norm at α ≥ 10.
+  openings by about 0.13-0.15 (absolute probability), relative to both no steering (experiment 02 only; experiment 01
+  measured +0.056, CI including 0) and equal-norm random directions.
+* **High confidence:** steering costs fluency, and more so than random pushes of equal norm at α = 15 (random
+  directions were tested only at α = 5 and 15; at α = 5 the two costs are about equal).
 * **Moderate confidence** (one experiment each way): the effect is non-monotone. Mean positivity is highest at
   α = 10 (the 10 vs 5 difference was not tested) and drops at 15 as text degrades.
 * **Exploratory:**
@@ -89,6 +91,6 @@ Details: [exp01_love_hate_dose_response.md](exp01_love_hate_dose_response.md),
 
 ## Limits of these experiments
 * One model, one layer, one vector, one dataset, one classifier.
-* Binary classifier with no neutral class: baseline positivity was already 0.67-0.75.
+* Binary classifier with no neutral class: baseline positivity was already 0.66-0.75.
 * 40-token continuations.
 * Isotropic random directions are a weaker control than an unrelated *real* steering vector of equal norm.

@@ -3,7 +3,7 @@ title: "Steering Vectors from Scratch: a Source-Verified Explainer and a Pre-reg
 author: "Libor Burian, independent researcher"
 date: "October 2026"
 abstract: |
-  Steering vectors change a language model's behaviour by adding a fixed vector to its residual-stream activations at inference time. We contribute two things. (i) A narrated 12-chapter animated explainer that defines every symbol of the two central equations (the mean-difference vector of Contrastive Activation Addition and the additive intervention) before using it. The explainer is built with three mechanical guarantees: all 28 on-screen quotations (40 in the registry) are verified verbatim against their downloaded sources, every spoken or displayed number is computed by code, and a test fails if narration uses a term before the chapter that defines it. (ii) Two pre-registered experiments on the "Love" − "Hate" Activation Addition (ActAdd) vector of Turner et al. on GPT-2-XL (layer 6), with 8-word IMDb review openings, a norm-matched random-direction control and an independent sentiment classifier. Experiment 1 (N = 30 prompts) supports direction specificity: at coefficient α = 5, P(positive) exceeds equal-norm random directions by +0.125 (95% CI [0.045, 0.203]), but the gain over no steering is not significant. Experiment 2 is powered for that contrast (N = 190 new prompts) and finds +0.146 [0.102, 0.192] over no steering. It replicates direction specificity (+0.132 [0.097, 0.166]), shows its highest mean positivity at α = 10 and a lower one at α = 15, and a fluency cost of +1.38 nats/token at α = 15. The negated vector does not reduce positivity. A post-hoc analysis suggests the vector injects the words more than the sentiment: the whole word "love" appears in 61.4% of α = 5 continuations and "hate" in 22.5% at α = −5, and those α = −5 continuations are rated as positive as unsteered text (0.665 vs 0.665).
+  Steering vectors change a language model's behaviour by adding a fixed vector to its residual-stream activations at inference time. We contribute two things. (i) A narrated 12-chapter animated explainer that defines every symbol of the two central equations (the mean-difference vector of Contrastive Activation Addition and the additive intervention) before using it. The explainer is built with three mechanical guarantees: all 28 on-screen quotations (40 in the registry) are verified verbatim against their downloaded sources, every spoken or displayed number is computed by code, and a test fails if narration uses a term before the chapter that defines it. (ii) Two pre-registered experiments on the "Love" − "Hate" Activation Addition (ActAdd) vector of Turner et al. on GPT-2-XL (layer 6), with 8-word IMDb review openings, a norm-matched random-direction control and an independent sentiment classifier. Experiment 1 (N = 30 prompts) supports direction specificity: at coefficient α = 5, P(positive) exceeds equal-norm random directions by +0.125 (95% CI [0.045, 0.203]), but the gain over no steering is not significant. Experiment 2 is powered for that contrast (N = 190 new prompts) and finds +0.146 [0.102, 0.192] over no steering. It replicates direction specificity (+0.132 [0.097, 0.166]), shows its highest mean positivity at α = 10 and a lower one at α = 15, and a fluency cost of +1.38 nats/token at α = 15. The negated vector does not reduce positivity. A post-hoc analysis suggests the vector injects the words more than the sentiment: a whole-word form of "love" appears in 61.4% of α = 5 continuations and a form of "hate" in 22.5% at α = −5, and those α = −5 continuations are rated as positive as unsteered text (0.665 vs 0.665).
 ---
 
 # Introduction
@@ -31,7 +31,7 @@ where $a_\ell(p,c)\in\mathbb{R}^d$ is the residual stream at layer $\ell$ at the
 
 * **Rendering and narration.** Twelve Manim scenes, narrated with Microsoft Edge neural TTS through manim-voiceover. Word-level timings from the TTS synchronise animations via bookmarks.
 * **Mechanical guarantees:**
-  * **Quotes.** All 26 quotations live in one registry and are checked as verbatim substrings, after whitespace and typography normalisation, of each source's downloaded HTML or PDF. Quotes from sources not licensed CC BY 4.0 are limited to 15 words.
+  * **Quotes.** All 40 quotations (28 of them shown on screen) live in one registry and are checked as verbatim substrings, after whitespace and typography normalisation, of each source's downloaded HTML or PDF. Quotes from sources not licensed CC BY 4.0 are limited to 15 words.
   * **Numbers.** Toy numbers come from exact rational arithmetic, and real numbers from JSON files written by the experiment code. Unit tests pin both.
   * **Definition order.** A glossary maps 51 terms to their defining chapter, and a test fails if any earlier chapter's narration uses one.
 * **Visual QA.** Contact sheets of rendered frames are inspected for overlaps and clipping.
@@ -90,7 +90,7 @@ Table 1: Pre-registered results (95% CI). Full tables: `reports/results_tables.m
 
 **Implications.**
 
-* The negated vector is not an "anti-love" vector. Mechanically it adds the token identity of "H"/"ate".
+* The negated vector is not an "anti-love" vector. Mechanically it adds $\alpha\,(h_\ell(p^-)-h_\ell(p^+))$, the "H"/"ate" activations minus the "Love"/space ones, and (post-hoc) its main visible effect is the word "hate".
 * Much of the positive effect co-occurs with the literal word "love", consistent with ActAdd's framing of topic steering.
 * Equal-norm random controls themselves change the metric (Experiment 1: −0.07 positivity). So "beats random" and "beats nothing" are different claims, and both should be reported.
 * Statistical power must be computed for the contrast that matters. A null at N = 30 became a clear effect at N = 190.
@@ -108,7 +108,7 @@ Table 1: Pre-registered results (95% CI). Full tables: `reports/results_tables.m
 # Limitations
 
 * **Narrow setting:** one model, layer, vector, prompt distribution and classifier.
-* **Metric:** a binary classifier with no neutral class (baseline positivity 0.67–0.75 leaves limited headroom), and it cannot separate sentiment from lexical mention or incoherence.
+* **Metric:** a binary classifier with no neutral class (baseline positivity 0.66–0.75 leaves limited headroom), and it cannot separate sentiment from lexical mention or incoherence.
 * **Generation length:** 40-token continuations.
 * **Control strength:** isotropic random controls are weaker than an unrelated real steering vector of equal norm.
 * **Fidelity:** padding follows the paper, not the 2023 README demo.
